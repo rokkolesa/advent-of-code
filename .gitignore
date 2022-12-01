@@ -1,4 +1,5 @@
-2022/.gradle
+**/.DS_Store
+advent-of-code-2022/.gradle
 .idea
 build
 **/src/**/*.txt
