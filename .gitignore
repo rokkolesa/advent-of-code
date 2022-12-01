@@ -1,0 +1,4 @@
+2022/.gradle
+.idea
+build
+**/src/**/*.txt
