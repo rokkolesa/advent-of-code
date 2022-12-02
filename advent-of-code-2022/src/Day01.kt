@@ -1,12 +1,17 @@
-fun main() {
-    fun readElves(input: List<String>): ArrayList<Int> {
+fun main()
+{
+    fun readElves(input: List<String>): ArrayList<Int>
+    {
         val elves = ArrayList<Int>()
         var elf = 0
         input.forEach {
-            if (it.isBlank()) {
-                elves.add(elf);
+            if (it.isBlank())
+            {
+                elves.add(elf)
                 elf = 0
-            } else {
+            }
+            else
+            {
                 elf += it.toInt()
             }
         }
@@ -14,13 +19,15 @@ fun main() {
         return elves
     }
 
-    fun part1(input: List<String>): Int {
+    fun part1(input: List<String>): Int
+    {
         return readElves(input)
             .max()
     }
 
 
-    fun part2(input: List<String>): Int {
+    fun part2(input: List<String>): Int
+    {
         return readElves(input)
             .sortedDescending()
             .take(3)

@@ -1,8 +1,10 @@
-enum class Opponent {
+enum class Opponent
+{
     A, B, C
 }
 
-enum class Me(val score: Int, val outcome: Int) {
+enum class Me(val score: Int, val outcome: Int)
+{
     X(1, 0), Y(2, 3), Z(3, 6)
 }
 
@@ -19,7 +21,8 @@ val scores: Array<IntArray> = arrayOf(
 
 data class Input(val opponent: Opponent, val me: Me)
 
-fun main() {
+fun main()
+{
     val inputLineRegex = """([ABC]) ([XYZ])""".toRegex()
     fun parseInput(input: List<String>): List<Input> = input.map {
         val (opponentSign, mySign) = inputLineRegex
@@ -43,13 +46,8 @@ fun main() {
         return rightScore + targetScores
     }
 
-    fun part1(input: List<String>): Int {
-        return sumScores(input, Me::score, outcomes);
-    }
-
-    fun part2(input: List<String>): Int {
-        return sumScores(input, Me::outcome, scores);
-    }
+    fun part1(input: List<String>): Int = sumScores(input, Me::score, outcomes)
+    fun part2(input: List<String>): Int = sumScores(input, Me::outcome, scores)
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day02_test")
