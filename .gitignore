@@ -1,5 +1,6 @@
 **/.DS_Store
 advent-of-code-2022/.gradle
 .idea
+.fleet
 build
 **/src/**/*.txt
