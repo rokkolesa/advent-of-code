@@ -4,3 +4,4 @@ advent-of-code-2022/.gradle
 .fleet
 build
 **/src/**/*.txt
+**/*.sh
