@@ -1,10 +1,8 @@
-enum class Opponent
-{
+enum class Opponent {
     A, B, C
 }
 
-enum class Me(val score: Int, val outcome: Int)
-{
+enum class Me(val score: Int, val outcome: Int) {
     X(1, 0), Y(2, 3), Z(3, 6)
 }
 
@@ -21,8 +19,7 @@ val scores: Array<IntArray> = arrayOf(
 
 data class Input(val opponent: Opponent, val me: Me)
 
-fun main()
-{
+fun main() {
     val inputLineRegex = """([ABC]) ([XYZ])""".toRegex()
     fun parseInput(input: List<String>): List<Input> = input.map {
         val (opponentSign, mySign) = inputLineRegex
@@ -38,8 +35,7 @@ fun main()
         input: List<String>,
         rightInput: (Me) -> Int,
         targetScore: Array<IntArray>
-    ): Int
-    {
+    ): Int {
         val parsedInput = parseInput(input)
         val rightScore = parsedInput.sumOf { (_, me) -> rightInput(me) }
         val targetScores = parsedInput.sumOf { (opponent, me) -> targetScore[me.ordinal][opponent.ordinal] }

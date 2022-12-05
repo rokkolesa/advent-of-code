@@ -1,22 +1,22 @@
+import java.util.TreeMap
+
 data class Move(val amount: Int, val from: Int, val to: Int)
 
 fun <E> ArrayDeque<E>.removeFirst(length: Int): ArrayDeque<E> {
     return (1..length).mapTo(ArrayDeque()) { removeFirst() }
 }
 
-fun <E> ArrayDeque<E>.addAllFirst(collection: List<E>, preserveOrder: Boolean = false) {
+fun <E> ArrayDeque<E>.addAllFirst(collection: Iterable<E>, preserveOrder: Boolean = false) {
     (if (preserveOrder) collection.reversed() else collection)
         .forEach(::addFirst)
 }
 
+typealias CrateStack = ArrayDeque<String>
+
 fun main() {
     val moveRegex = """move (\d+) from (\d+) to (\d+)""".toRegex()
 
-    fun parseStacks(line: String): List<String> {
-        return line.substring(1)
-            .windowed(size = 1, step = 4)
-            .toList()
-    }
+    fun parseStack(line: String): List<String> = line.substring(1).windowed(size = 1, step = 4)
 
     fun parseMove(line: String): Move {
         val (amount, from, to) = moveRegex
@@ -32,34 +32,28 @@ fun main() {
         input: List<String>,
         preserveOrder: Boolean = false
     ): String {
-        val stackLines = mutableListOf<String>()
-        var switchIdx = 0
-        for ((idx, line) in input.withIndex()) {
-            if (line.isEmpty()) {
-                stackLines.removeLast()
-                switchIdx = idx + 1
-                break
+        val (stackLines, moveLines) = input.split(String::isEmpty)
+
+        val stacks = TreeMap<Int, CrateStack>()
+        stackLines
+            .dropLast(1)
+            .map(::parseStack)
+            .forEach {
+                it.forEachIndexed { idx, crate ->
+                    if (crate.isNotBlank()) stacks.getOrPut(idx, ::CrateStack).addLast(crate)
+                }
             }
-            stackLines.add(line)
-        }
 
-        val stackDefs: List<List<String>> = stackLines
-            .map(::parseStacks)
-        val maxStackDef = stackDefs.maxOf(List<String>::size)
-        val stacks: List<ArrayDeque<String>> = (1..maxStackDef).map { ArrayDeque() }
-        stackDefs.forEach {
-            it.forEachIndexed { idx, crate -> if (crate.isNotBlank()) stacks[idx].addLast(crate) }
-        }
-        val moves: List<Move> = input.subList(switchIdx, input.size).map(::parseMove)
+        moveLines
+            .map(::parseMove)
+            .forEach {
+                stacks[it.to]!!.addAllFirst(
+                    stacks[it.from]!!.removeFirst(it.amount),
+                    preserveOrder
+                )
+            }
 
-        moves.forEach {
-            stacks[it.to].addAllFirst(
-                stacks[it.from].removeFirst(it.amount),
-                preserveOrder
-            )
-        }
-
-        return stacks.joinToString(transform = ArrayDeque<String>::first, separator = "")
+        return stacks.values.joinToString(transform = ArrayDeque<String>::first, separator = "")
     }
 
 
