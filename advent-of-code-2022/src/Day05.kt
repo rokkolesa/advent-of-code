@@ -46,9 +46,9 @@ fun main() {
 
         moveLines
             .map(::parseMove)
-            .forEach {
-                stacks[it.to]!!.addAllFirst(
-                    stacks[it.from]!!.removeFirst(it.amount),
+            .forEach { (amount, from, to) ->
+                stacks[to]!!.addAllFirst(
+                    stacks[from]!!.removeFirst(amount),
                     preserveOrder
                 )
             }
