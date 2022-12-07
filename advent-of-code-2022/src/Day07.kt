@@ -1,16 +1,16 @@
-class Dir(val path: String, var size: Long, val dirs: MutableSet<Dir> = mutableSetOf(), val parent: Dir? = null) {
+class Dir(val path: String, var size: Long, val parent: Dir? = null) {
     operator fun plusAssign(fileSize: Long) {
         this.size += fileSize
         parent?.plusAssign(fileSize)
     }
 
     override fun toString(): String {
-        return "Dir $path, $size" + (if (dirs.isNotEmpty()) " dirs: $dirs" else "")
+        return "$path ($size)"
     }
 }
 
 val diskSpace = 70_000_000L
-val neededFreeSpace = 30_000_000L
+const val neededFreeSpace = 30_000_000L
 
 fun main() {
 
@@ -20,18 +20,20 @@ fun main() {
         val allDirs = mutableListOf(root)
 
         fun addDir(dirName: String): Dir {
-            val newDirPath = "${if(root == currentDir) "" else currentDir.path}/$dirName"
+            val newDirPath = "${if (root == currentDir) "" else currentDir.path}/$dirName"
 
-            val find = allDirs.find { d -> d.path == newDirPath }
-            return if (find != null) find else {
-                val newDir = Dir(newDirPath, 0L, parent = currentDir)
-                allDirs.add(newDir)
-                newDir
+            val existingDir = allDirs.find { d -> d.path == newDirPath }
+            return when {
+                existingDir != null -> existingDir
+                else -> {
+                    val newDir = Dir(newDirPath, 0L, parent = currentDir)
+                    allDirs.add(newDir)
+                    newDir
+                }
             }
         }
 
         input.forEach { line ->
-            // commands
             if (line.startsWith("$ ")) {
                 val command = line.substringAfter("$ ")
                 currentDir = when {
@@ -43,10 +45,7 @@ fun main() {
                 }
             } else {
                 val (sizeOrDir, _) = line.split(" ")
-                when (sizeOrDir) {
-                    "dir" -> {}
-                    else -> currentDir += sizeOrDir.toLong()
-                }
+                if (sizeOrDir != "dir") currentDir += sizeOrDir.toLong()
             }
         }
         return root to allDirs
@@ -56,18 +55,16 @@ fun main() {
         parseInput(input)
             .second
             .asSequence()
-            .map { it.size }
-            .filter { it < 100_000 }
-            .sum()
+            .filter { it.size < 100_000 }
+            .sumOf { it.size }
 
 
     fun part2(input: List<String>): Long {
         val (root, allDirs) = parseInput(input)
         return allDirs
             .asSequence()
-            .map { it.size }
-            .filter { it > (neededFreeSpace - diskSpace + root.size) }
-            .min()
+            .filter { it.size > (neededFreeSpace - diskSpace + root.size) }
+            .minOf { it.size }
     }
 
 
