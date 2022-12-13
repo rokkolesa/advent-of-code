@@ -62,7 +62,6 @@ fun main() {
         .sorted()
         .withIndex()
         .filter { (_, packetElement) -> packetElement == parsePacketList("[[2]]") || packetElement == parsePacketList("[[6]]") }
-        .take(2)
         .map { (idx, _) -> idx + 1 }
         .reduce { acc, idx -> acc * idx }
 
