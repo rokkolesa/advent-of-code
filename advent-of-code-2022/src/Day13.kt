@@ -1,5 +1,6 @@
 sealed interface PacketElement : Comparable<PacketElement>
 data class PacketValue(val intValue: Int) : PacketElement {
+
     override fun compareTo(other: PacketElement): Int = when (other) {
         is PacketValue -> intValue.compareTo(other.intValue)
         is PacketList -> PacketList(mutableListOf(this)).compareTo(other)
@@ -9,6 +10,7 @@ data class PacketValue(val intValue: Int) : PacketElement {
 }
 
 data class PacketList(val elements: List<PacketElement> = mutableListOf()) : PacketElement {
+
     override fun compareTo(other: PacketElement): Int = when (other) {
         is PacketValue -> compareTo(PacketList(mutableListOf(other)))
         is PacketList ->
@@ -22,46 +24,47 @@ data class PacketList(val elements: List<PacketElement> = mutableListOf()) : Pac
     override fun toString(): String = elements.toString()
 }
 
-fun main() {
-    fun String.tokenize(delimiter: Char = ','): List<String> {
-        val tokens = mutableListOf<String>()
-        var bracketCount = 0
-        var tokenStart = 0
-        for (i in indices) {
-            bracketCount += when (this[i]) {
-                '[' -> 1
-                ']' -> -1
-                else -> 0
-            }
-            if (bracketCount <= 0 && this[i] == delimiter) {
-                tokens.add(substring(tokenStart until i))
-                tokenStart = i + 1
-            }
+fun String.tokenize(delimiter: Char = ','): List<String> {
+    val tokens = mutableListOf<String>()
+    var bracketCount = 0
+    var tokenStart = 0
+    for (i in indices) {
+        bracketCount += when (this[i]) {
+            '[' -> 1
+            ']' -> -1
+            else -> 0
         }
-        tokens.add(substring(tokenStart until length))
-        return tokens
+        if (bracketCount <= 0 && this[i] == delimiter) {
+            tokens.add(substring(tokenStart until i))
+            tokenStart = i + 1
+        }
     }
+    tokens.add(substring(tokenStart until length))
+    return tokens
+}
 
-    fun parsePacketList(input: String): PacketElement = when {
+fun main() {
+    fun parsePacket(input: String): PacketElement = when {
         input.isEmpty() || input == "[]" -> PacketList()
         !input.contains("[") -> PacketValue(input.toInt())
-        else -> PacketList(input.substring(1 until input.lastIndex).tokenize().map(::parsePacketList))
+        else -> PacketList(input.substring(1 until input.lastIndex).tokenize().map(::parsePacket))
     }
 
     fun part1(input: List<String>): Int = input
         .split(String::isBlank)
         .asSequence()
-        .map { it.map(::parsePacketList) }
-        .mapIndexed { idx, (left, right) -> (left < right) to (idx + 1) }
-        .sumOf { (result, idx) -> if (result) idx else 0 }
+        .map { it.map(::parsePacket) }
+        .withIndex()
+        .filter { (_, p) -> p.first() < p.last() }
+        .sumOf { (idx, _) -> idx + 1 }
 
-    fun part2(input: List<String>): Int = (input + listOf("", "[[2]]", "[[6]]"))
-        .split(String::isBlank)
+    fun part2(input: List<String>): Int = (input + "[[2]]" + "[[6]]")
         .asSequence()
-        .flatMap { it.map(::parsePacketList) }
+        .filter(String::isNotBlank)
+        .map(::parsePacket)
         .sorted()
         .withIndex()
-        .filter { (_, packetElement) -> packetElement == parsePacketList("[[2]]") || packetElement == parsePacketList("[[6]]") }
+        .filter { (_, packetElement) -> packetElement == parsePacket("[[2]]") || packetElement == parsePacket("[[6]]") }
         .map { (idx, _) -> idx + 1 }
         .reduce { acc, idx -> acc * idx }
 
