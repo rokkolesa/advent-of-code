@@ -18,8 +18,8 @@ fun main() {
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day03_test")
-    check(part1(testInput) == 157)
-    check(part2(testInput) == 70)
+    check(part1(testInput), 157, part = "Part 1")
+    check(part2(testInput), 70, part = "Part 2")
 
     val input = readInput("Day03")
     println("Part 1: ${part1(input)}")

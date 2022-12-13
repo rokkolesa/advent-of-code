@@ -110,8 +110,8 @@ fun main() {
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day11_test")
-    check(part1(testInput) == "10605".toBigInteger())
-    check(part2(testInput) == "2713310158".toBigInteger())
+    check(part1(testInput), "10605".toBigInteger(), part = "Part 1")
+    check(part2(testInput), "2713310158".toBigInteger(), part = "Part 2")
 
     val input = readInput("Day11")
     println("Part 1: ${part1(input)}")
