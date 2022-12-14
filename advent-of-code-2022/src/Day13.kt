@@ -58,15 +58,14 @@ fun main() {
         .filter { (_, p) -> p.first() < p.last() }
         .sumOf { (idx, _) -> idx + 1 }
 
-    fun part2(input: List<String>): Int = (input + "[[2]]" + "[[6]]")
+    fun part2(input: List<String>): Int = input
         .asSequence()
         .filter(String::isNotBlank)
         .map(::parsePacket)
-        .sorted()
-        .withIndex()
-        .filter { (_, packetElement) -> packetElement == parsePacket("[[2]]") || packetElement == parsePacket("[[6]]") }
-        .map { (idx, _) -> idx + 1 }
-        .reduce { acc, idx -> acc * idx }
+        .let { Triple(it, parsePacket("[[2]]"), parsePacket("[[6]]")) }
+        .let { (packets, divider2, divider6) ->
+            (packets.count { it < divider2 } + 1) * (packets.count { it < divider6 } + 2)
+        }
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day13_test")
