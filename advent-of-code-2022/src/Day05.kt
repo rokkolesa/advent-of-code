@@ -1,3 +1,6 @@
+package day05
+
+import utils.*
 import java.util.TreeMap
 
 data class Move(val amount: Int, val from: Int, val to: Int)

@@ -1,3 +1,7 @@
+package day06
+
+import utils.*
+
 fun main() {
 
     fun distinctChars(input: String, numOfChars: Int): Int =

@@ -1,3 +1,6 @@
+package day11
+
+import utils.*
 import java.math.BigInteger
 
 data class Item(val moduloItems: List<Int>)

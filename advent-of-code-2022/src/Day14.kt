@@ -1,3 +1,14 @@
+package day14
+
+import utils.*
+
+data class P(var x: Int, var y: Int): Comparable<P> {
+    override fun compareTo(other: P): Int {
+        val compareX = x.compareTo(other.x)
+        return if(compareX == 0) y.compareTo(other.y) else compareX
+    }
+}
+
 fun main() {
     val rockRegex = """(\d+),(\d+)""".toRegex()
     fun parseRockAsObstacle(input: List<String>): MutableSet<P> = input.flatMap {
@@ -6,7 +17,7 @@ fun main() {
             .map(MatchResult::destructured)
             .map { (x, y) -> P(x.toInt(), y.toInt()) }
             .windowed(2)
-            .map { interval -> interval.sortedWith(compareBy(P::x).thenBy(P::y)) }
+            .map(List<P>::sorted)
             .flatMap { (start, end) ->
                 buildSet {
                     for (i in start.x..end.x) {
@@ -62,5 +73,4 @@ fun main() {
     val input = readInput("Day14")
     println("Part 1: ${part1(input)}")
     println("Part 2: ${part2(input)}")
-
 }

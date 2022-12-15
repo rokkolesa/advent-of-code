@@ -1,3 +1,6 @@
+package day09
+
+import utils.*
 import kotlin.math.abs
 
 data class P(var x: Int, var y: Int) {

@@ -1,3 +1,7 @@
+package day02
+
+import utils.*
+
 enum class Opponent {
     A, B, C
 }

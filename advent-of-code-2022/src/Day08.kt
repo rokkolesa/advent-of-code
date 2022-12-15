@@ -1,3 +1,6 @@
+package day08
+
+import utils.*
 import kotlin.math.max
 
 fun <T> Collection<T>.indexOfFirstOrNull(predicate: (T) -> Boolean): Int? {
@@ -86,7 +89,8 @@ fun main() {
                 val leftScore = leftRow.size - (leftRow.indexOfLastOrNull { it >= currentHeight } ?: 0)
                 val rightScore = (rightRow.indexOfFirstOrNull { it >= currentHeight } ?: rightRow.lastIndex) + 1
                 val topScore = topColumn.size - (topColumn.indexOfLastOrNull { it >= currentHeight } ?: 0)
-                val bottomScore = (bottomColumn.indexOfFirstOrNull { it >= currentHeight } ?: bottomColumn.lastIndex) + 1
+                val bottomScore = (bottomColumn.indexOfFirstOrNull { it >= currentHeight }
+                    ?: bottomColumn.lastIndex) + 1
 
                 score = max(score, leftScore * rightScore * topScore * bottomScore)
             }

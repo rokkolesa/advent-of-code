@@ -1,3 +1,7 @@
+package day03
+
+import utils.*
+
 fun main() {
     val charMap = buildMap {
         putAll("abcdefghijklmnopqrstuvwxyz".toCharArray().associateWith { it.code - 96 })

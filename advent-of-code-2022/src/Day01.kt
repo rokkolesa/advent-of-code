@@ -1,3 +1,7 @@
+package day01
+
+import utils.*
+
 fun main() {
     fun readElves(input: List<String>): List<Int> =
         input.split(String::isEmpty)

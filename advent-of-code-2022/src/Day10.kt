@@ -1,3 +1,7 @@
+package day10
+
+import utils.*
+
 fun main() {
     fun runProgram(input: List<String>, cycleAction: (Int, Int) -> Unit) {
         var x = 1

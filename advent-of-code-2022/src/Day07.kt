@@ -1,3 +1,6 @@
+package day07
+
+import utils.*
 class Dir(val path: String, var size: Long, val parent: Dir? = null) {
     operator fun plusAssign(fileSize: Long) {
         this.size += fileSize

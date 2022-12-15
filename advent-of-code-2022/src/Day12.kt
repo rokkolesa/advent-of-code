@@ -1,3 +1,7 @@
+package day12
+
+import utils.*
+
 data class Step(
     val position: Pair<Int, Int>,
     val name: Char,

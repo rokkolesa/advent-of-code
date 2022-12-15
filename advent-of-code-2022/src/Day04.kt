@@ -1,3 +1,7 @@
+package day04
+
+import utils.*
+
 fun main() {
     infix fun IntRange.contains(other: IntRange): Boolean =
         this.contains(other.first) && this.contains(other.last)
