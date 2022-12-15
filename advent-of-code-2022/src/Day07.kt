@@ -1,6 +1,7 @@
 package day07
 
 import utils.*
+
 class Dir(val path: String, var size: Long, val parent: Dir? = null) {
     operator fun plusAssign(fileSize: Long) {
         this.size += fileSize
@@ -73,10 +74,10 @@ fun main() {
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day07_test")
-    check(part1(testInput), 95437L, part = "Part 1")
-    check(part2(testInput), 24933642L, part = "Part 2")
+    check("Part 1", 95437L) { part1(testInput) }
+    check("Part 2", 24933642L) { part2(testInput) }
 
     val input = readInput("Day07")
-    println("Part 1: ${part1(input)}")
-    println("Part 2: ${part2(input)}")
+    simulate("Part 1") { part1(input) }
+    simulate("Part 2") { part2(input) }
 }

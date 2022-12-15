@@ -4,6 +4,8 @@ import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.function.Predicate
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTimedValue
 
 /**
  * Reads lines from the given input txt file.
@@ -34,14 +36,27 @@ fun List<String>.split(predicate: Predicate<String>): List<List<String>> {
     return split
 }
 
-fun <T> check(actual: T,
-              expected: T,
-              part: String,
-              compare: (T, T) -> Boolean = { x, y -> x == y },
-              message: ((T, T) -> Any)? = null) {
-    if (!compare(actual, expected)) {
-        val errorMessage = message?.invoke(actual, expected) ?: "Actual:   $actual\nExpected: $expected"
-        throw IllegalStateException("\n$part: Check failed!\n$errorMessage")
+@OptIn(ExperimentalTime::class)
+fun <T> check(
+    part: String,
+    expected: T,
+    compare: (T, T) -> Boolean = { x, y -> x == y },
+    message: ((T, T) -> Any)? = null,
+    retrieveValue: () -> T
+) {
+    val (actual, duration) = measureTimedValue {
+        val actual = retrieveValue()
+        if (actual !is Unit && !compare(actual, expected)) {
+            val errorMessage = message?.invoke(actual, expected) ?: "Actual:   $actual\nExpected: $expected"
+            throw IllegalStateException("\n$part: Check failed!\n$errorMessage")
+        }
+        actual
     }
-    println("$part: $actual (OK)")
+    println("$part: $actual (OK) | Elapsed time: $duration")
+}
+
+@OptIn(ExperimentalTime::class)
+fun <T> simulate(part: String, retrieveValue: () -> T) {
+    val (value, duration) = measureTimedValue(retrieveValue)
+    println("$part: $value | Elapsed time: $duration")
 }

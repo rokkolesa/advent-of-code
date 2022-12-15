@@ -41,12 +41,10 @@ fun main() {
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day10_test")
-    check(part1(testInput), 13140, part = "Part 1")
-    println("Part 2: (test)")
-    part2(testInput)
+    check("Part 1", 13140) { part1(testInput) }
+    check("Part 2", null) { part2(testInput) }
 
     val input = readInput("Day10")
-    println("Part 1: ${part1(input)}")
-    println("Part 2:")
-    part2(input)
+    simulate("Part 1") { part1(input) }
+    simulate("Part 2") { part2(input) }
 }

@@ -14,20 +14,20 @@ fun main() {
     fun part2(input: String): Int = distinctChars(input, 14)
 
     // test if implementation meets criteria from the description, like:
-    check(part1("mjqjpqmgbljsphdztnvjfqwrcgsmlb"), 7, part = "Part 1")
-    check(part1("bvwbjplbgvbhsrlpgdmjqwftvncz"), 5, part = "Part 1")
-    check(part1("nppdvjthqldpwncqszvftbrmjlhg"), 6, part = "Part 1")
-    check(part1("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"), 10, part = "Part 1")
-    check(part1("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"), 11, part = "Part 1")
+    check("Part 1", 7) { part1("mjqjpqmgbljsphdztnvjfqwrcgsmlb") }
+    check("Part 1", 5) { part1("bvwbjplbgvbhsrlpgdmjqwftvncz") }
+    check("Part 1", 6) { part1("nppdvjthqldpwncqszvftbrmjlhg") }
+    check("Part 1", 10) { part1("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg") }
+    check("Part 1", 11) { part1("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw") }
 
-    check(part2("mjqjpqmgbljsphdztnvjfqwrcgsmlb"), 19, part = "Part 2")
-    check(part2("bvwbjplbgvbhsrlpgdmjqwftvncz"), 23, part = "Part 2")
-    check(part2("nppdvjthqldpwncqszvftbrmjlhg"), 23, part = "Part 2")
-    check(part2("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"), 29, part = "Part 2")
-    check(part2("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"), 26, part = "Part 2")
+    check("Part 2", 19) { part2("mjqjpqmgbljsphdztnvjfqwrcgsmlb") }
+    check("Part 2", 23) { part2("bvwbjplbgvbhsrlpgdmjqwftvncz") }
+    check("Part 2", 23) { part2("nppdvjthqldpwncqszvftbrmjlhg") }
+    check("Part 2", 29) { part2("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg") }
+    check("Part 2", 26) { part2("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw") }
 
 
     val input = readInput("Day06").first()
-    println("Part 1: ${part1(input)}")
-    println("Part 2: ${part2(input)}")
+    simulate("Part 1") { part1(input) }
+    simulate("Part 2") { part2(input) }
 }

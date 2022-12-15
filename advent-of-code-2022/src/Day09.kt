@@ -77,11 +77,11 @@ fun main() {
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day09_test")
     val testInput2 = readInput("Day09_test_2")
-    check(part1(testInput), 13, part = "Part 1")
-    check(part2(testInput), 1, part = "Part 2")
-    check(part2(testInput2), 36, part = "Part 2")
+    check("Part 1", 13) { part1(testInput) }
+    check("Part 2", 1) { part2(testInput) }
+    check("Part 2", 36) { part2(testInput2) }
 
     val input = readInput("Day09")
-    println("Part 1: ${part1(input)}")
-    println("Part 2: ${part2(input)}")
+    simulate("Part 1") { part1(input) }
+    simulate("Part 2") { part2(input) }
 }

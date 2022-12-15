@@ -1,7 +1,6 @@
 package day15
 
-import utils.check
-import utils.readInput
+import utils.*
 import java.math.BigInteger
 import java.util.*
 import kotlin.math.abs
@@ -79,10 +78,10 @@ fun main() {
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day15_test")
-    check(part1(testInput, 10), 26, part = "Part 1")
-    check(part2(testInput, 20), 56000011.toBigInteger(), part = "Part 2")
+    check("Part 1", 26) { part1(testInput, 10) }
+    check("Part 2", "56000011".toBigInteger()) { part2(testInput, 20) }
 
     val input = readInput("Day15")
-    println("Part 1: ${part1(input, 2_000_000)}")
-    println("Part 2: ${part2(input, 4_000_000)}")
+    simulate("Part 1") { part1(input, 2_000_000) }
+    simulate("Part 2") { part2(input, 4_000_000) }
 }

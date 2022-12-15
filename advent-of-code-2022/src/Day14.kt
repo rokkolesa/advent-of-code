@@ -2,10 +2,10 @@ package day14
 
 import utils.*
 
-data class P(var x: Int, var y: Int): Comparable<P> {
+data class P(var x: Int, var y: Int) : Comparable<P> {
     override fun compareTo(other: P): Int {
         val compareX = x.compareTo(other.x)
-        return if(compareX == 0) y.compareTo(other.y) else compareX
+        return if (compareX == 0) y.compareTo(other.y) else compareX
     }
 }
 
@@ -67,10 +67,10 @@ fun main() {
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day14_test")
-    check(part1(testInput), 24, part = "Part 1")
-    check(part2(testInput), 93, part = "Part 2")
+    check("Part 1", 24) { part1(testInput) }
+    check("Part 2", 93) { part2(testInput) }
 
     val input = readInput("Day14")
-    println("Part 1: ${part1(input)}")
-    println("Part 2: ${part2(input)}")
+    simulate("Part 1") { part1(input) }
+    simulate("Part 2") { part2(input) }
 }
