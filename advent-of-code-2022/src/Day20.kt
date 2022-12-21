@@ -8,17 +8,17 @@ data class FileNumber(var idx: Int, val value: Long)
 fun main() {
     fun decrypt(input: List<String>, decryptionKey: Long = 1, repeat: Int = 1): Long =
         input.mapIndexed { idx, element -> FileNumber(idx, element.toLong() * decryptionKey) }
-            .also { file ->
+            .apply {
                 repeat(repeat) {
-                    for (fileNumber in file) {
+                    for (fileNumber in this) {
                         val (idx, value) = fileNumber
 
-                        val newIdx = (idx + value.mod(file.size - 1)).let {
+                        val newIdx = (idx + value.mod(size - 1)).let {
                             when {
-                                it >= file.size - 1 -> it + 1
+                                it >= size - 1 -> it + 1
                                 else -> it
                             }
-                        }.mod(file.size)
+                        }.mod(size)
 
                         fileNumber.idx = newIdx
 
@@ -26,15 +26,15 @@ fun main() {
                             if (idx < newIdx) idx..newIdx to -1
                             else newIdx..idx to 1
 
-                        for (pair in file) {
+                        for (pair in this) {
                             if (pair !== fileNumber && pair.idx in rangeToCorrect) {
-                                pair.idx = (pair.idx + pushBy).mod(file.size)
+                                pair.idx = (pair.idx + pushBy).mod(size)
                             }
                         }
                     }
                 }
             }
-            .let { it to (it.find { (_, v) -> v == 0L })!!.idx }
+            .run { this to (find { (_, v) -> v == 0L })!!.idx }
             .let { (file, zeroIdx) ->
                 (1..3).sumOf { i ->
                     (file.find { (idx, _) -> (i * 1000 + zeroIdx).mod(file.size) == idx })!!.value
