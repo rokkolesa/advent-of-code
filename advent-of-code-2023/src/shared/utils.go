@@ -34,3 +34,32 @@ func Reverse(s string) string {
 	}
 	return string(r)
 }
+
+func Range(from, to int) (slice []int) {
+	slice = make([]int, to-from)
+	for i := range slice {
+		slice[i] = i + from
+	}
+	return
+}
+
+type Point struct {
+	X int
+	Y int
+}
+
+func (p Point) Adjacent() []Point {
+	return []Point{
+		// left-right
+		{X: p.X - 1, Y: p.Y},
+		{X: p.X + 1, Y: p.Y},
+		// top-bottom
+		{X: p.X, Y: p.Y + 1},
+		{X: p.X, Y: p.Y - 1},
+		// diagonals
+		{X: p.X - 1, Y: p.Y - 1},
+		{X: p.X + 1, Y: p.Y - 1},
+		{X: p.X + 1, Y: p.Y + 1},
+		{X: p.X - 1, Y: p.Y + 1},
+	}
+}
