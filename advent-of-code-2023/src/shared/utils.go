@@ -63,3 +63,35 @@ func (p Point) Adjacent() []Point {
 		{X: p.X - 1, Y: p.Y + 1},
 	}
 }
+
+func Reduce[T any](slice []T, initialState T, reducer func(T, T) T) T {
+	state := initialState
+	for _, element := range slice {
+		state = reducer(state, element)
+	}
+	return state
+}
+
+func Sum[T int | float64](slice []T) T {
+	return Reduce(slice, 0, func(state T, element T) T {
+		return state + element
+	})
+}
+
+func Map[T any, R any](slice []T, mapper func(T) R) []R {
+	newSlice := make([]R, len(slice))
+	for i, element := range slice {
+		newSlice[i] = mapper(element)
+	}
+	return newSlice
+}
+
+func Filter[T any](slice []T, filter func(T) bool) []T {
+	var newSlice []T
+	for _, element := range slice {
+		if filter(element) {
+			newSlice = append(newSlice, element)
+		}
+	}
+	return newSlice
+}
