@@ -80,6 +80,12 @@ func Sum[T int | float64](slice []T) T {
 	})
 }
 
+func Product[T int | float64](slice []T) T {
+	return Reduce(slice, 1, func(state T, element T) T {
+		return state * element
+	})
+}
+
 func Map[T any, R any](slice []T, mapper func(T) R) []R {
 	newSlice := make([]R, len(slice))
 	for i, element := range slice {
@@ -98,30 +104,29 @@ func Filter[T any](slice []T, filter func(T) bool) []T {
 	return newSlice
 }
 
+func parseIntSafe(str string) int {
+	parsed, _ := strconv.Atoi(str)
+	return parsed
+}
+
 func ParseIntsAfter(input string, after string) []int {
-	return ParseInts(input[strings.Index(input, after)+1:])
+	return ParseFuncAfter(input, after, parseIntSafe)
 }
 func ParseInts(input string) []int {
+	return ParseFunc(input, parseIntSafe)
+}
+
+func ParseFunc[T any](input string, parseFunc func(string) T) []T {
 	return Map(
 		strings.Fields(strings.TrimSpace(input)),
-		func(str string) int {
-			parsed, _ := strconv.Atoi(str)
-			return parsed
-		},
+		parseFunc,
 	)
 }
 
-//func ParseIntsSep(input string, sep rune) []int {
-//	return Map(
-//		strings.FieldsFunc(
-//			strings.TrimSpace(input),
-//			func(r rune) bool {
-//				return r == sep
-//			},
-//		),
-//		func(str string) int {
-//			parsed, _ := strconv.Atoi(str)
-//			return parsed
-//		},
-//	)
-//}
+func ParseFuncAfter[T any](input string, after string, parseFunc func(string) T) []T {
+	return ParseFunc(input[strings.Index(input, after)+1:], parseFunc)
+}
+
+func DeleteSpaces(input string) string {
+	return strings.ReplaceAll(input, " ", "")
+}
