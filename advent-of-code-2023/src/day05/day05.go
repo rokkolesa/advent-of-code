@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"regexp"
 	"slices"
-	"strconv"
 	"strings"
 )
 
@@ -155,21 +154,13 @@ func splitInterval(processedInterval ProcessedInterval, almanacEntry AlmanacMapE
 }
 
 func getAlmanac(input string) (seeds []int64, almanacMaps map[string]*AlmanacMap) {
-	seedsLine := (strings.SplitN(input, "\n\n", 2))[0]
-	seeds = shared.Map(
-		strings.Fields(seedsLine)[1:],
-		func(seedString string) int64 {
-			seedNumber, _ := strconv.ParseInt(seedString, 10, 64)
-			return seedNumber
-		})
+	seedsAndMaps := strings.SplitN(input, "\n\n", 2)
+
+	seeds = shared.ParseFuncAfter(seedsAndMaps[0], ":", shared.ParseInt64Safe)
 
 	almanacMapIdRegex, _ := regexp.Compile("(.*)-to-(.*) map:")
 	almanacMaps = make(map[string]*AlmanacMap)
-	for i, almanacMapString := range strings.Split(input, "\n\n") {
-		// skip the seeds
-		if i == 0 {
-			continue
-		}
+	for _, almanacMapString := range strings.Split(seedsAndMaps[1], "\n\n") {
 		almanacMap := AlmanacMap{}
 		for j, almanacMapDef := range strings.Split(almanacMapString, "\n") {
 			// the first line is the source-to-target
@@ -178,12 +169,8 @@ func getAlmanac(input string) (seeds []int64, almanacMaps map[string]*AlmanacMap
 				almanacMap.source = almanacMapIds[1]
 				almanacMap.target = almanacMapIds[2]
 			} else {
-				almanacMapEntryDef := shared.Map(
-					strings.Fields(almanacMapDef),
-					func(seedString string) int64 {
-						seedNumber, _ := strconv.ParseInt(seedString, 10, 64)
-						return seedNumber
-					})
+				almanacMapEntryDef := shared.ParseFunc(almanacMapDef, shared.ParseInt64Safe)
+
 				almanacMap.entries = append(almanacMap.entries, AlmanacMapEntry{
 					destinationStart: almanacMapEntryDef[0],
 					sourceStart:      almanacMapEntryDef[1],

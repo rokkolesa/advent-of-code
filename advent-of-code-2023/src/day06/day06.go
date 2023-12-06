@@ -4,7 +4,6 @@ import (
 	"../shared"
 	_ "embed"
 	"math"
-	"strconv"
 	"strings"
 )
 
@@ -14,17 +13,12 @@ var sample string
 //go:embed day06.txt
 var input string
 
-func parseFloatSafe(str string) float64 {
-	float, _ := strconv.ParseFloat(str, 64)
-	return float
-}
-
 func part1(input string) int {
 	split := strings.Split(input, "\n")
 
 	// parse as floats as it will come in handy later
-	times := shared.ParseFuncAfter(split[0], ":", parseFloatSafe)
-	distances := shared.ParseFuncAfter(split[1], ":", parseFloatSafe)
+	times := shared.ParseFuncAfter(split[0], ":", shared.ParseFloatSafe)
+	distances := shared.ParseFuncAfter(split[1], ":", shared.ParseFloatSafe)
 
 	return winScenarios(times, distances)
 }

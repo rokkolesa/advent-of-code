@@ -104,16 +104,24 @@ func Filter[T any](slice []T, filter func(T) bool) []T {
 	return newSlice
 }
 
-func parseIntSafe(str string) int {
+func ParseIntSafe(str string) int {
 	parsed, _ := strconv.Atoi(str)
+	return parsed
+}
+func ParseInt64Safe(str string) int64 {
+	parsed, _ := strconv.ParseInt(str, 10, 64)
+	return parsed
+}
+func ParseFloatSafe(str string) float64 {
+	parsed, _ := strconv.ParseFloat(str, 64)
 	return parsed
 }
 
 func ParseIntsAfter(input string, after string) []int {
-	return ParseFuncAfter(input, after, parseIntSafe)
+	return ParseFuncAfter(input, after, ParseIntSafe)
 }
 func ParseInts(input string) []int {
-	return ParseFunc(input, parseIntSafe)
+	return ParseFunc(input, ParseIntSafe)
 }
 
 func ParseFunc[T any](input string, parseFunc func(string) T) []T {
