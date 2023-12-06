@@ -2,6 +2,8 @@ package shared
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -95,3 +97,31 @@ func Filter[T any](slice []T, filter func(T) bool) []T {
 	}
 	return newSlice
 }
+
+func ParseIntsAfter(input string, after string) []int {
+	return ParseInts(input[strings.Index(input, after)+1:])
+}
+func ParseInts(input string) []int {
+	return Map(
+		strings.Fields(strings.TrimSpace(input)),
+		func(str string) int {
+			parsed, _ := strconv.Atoi(str)
+			return parsed
+		},
+	)
+}
+
+//func ParseIntsSep(input string, sep rune) []int {
+//	return Map(
+//		strings.FieldsFunc(
+//			strings.TrimSpace(input),
+//			func(r rune) bool {
+//				return r == sep
+//			},
+//		),
+//		func(str string) int {
+//			parsed, _ := strconv.Atoi(str)
+//			return parsed
+//		},
+//	)
+//}
