@@ -1,6 +1,7 @@
 package shared
 
 import (
+	"cmp"
 	"fmt"
 	"strconv"
 	"strings"
@@ -66,10 +67,16 @@ func (p Point) Adjacent() []Point {
 	}
 }
 
-func Reduce[T any](slice []T, initialState T, reducer func(T, T) T) T {
+func Reduce[T, U any](slice []T, initialState U, reducer func(U, T) U) U {
+	return ReduceIndexed(slice, initialState, func(state U, element T, _ int) U {
+		return reducer(state, element)
+	})
+}
+
+func ReduceIndexed[T, U any](slice []T, initialState U, reducer func(U, T, int) U) U {
 	state := initialState
-	for _, element := range slice {
-		state = reducer(state, element)
+	for i, element := range slice {
+		state = reducer(state, element, i)
 	}
 	return state
 }
@@ -102,6 +109,33 @@ func Filter[T any](slice []T, filter func(T) bool) []T {
 		}
 	}
 	return newSlice
+}
+
+func AnyMatch[T any](slice []T, test func(T) bool) bool {
+	for _, element := range slice {
+		if test(element) {
+			return true
+		}
+	}
+	return false
+}
+
+func AllMatch[T any](slice []T, test func(T) bool) bool {
+	return !AnyMatch(slice, func(element T) bool {
+		return !test(element)
+	})
+}
+
+func MaxEntryByValue[K comparable, V cmp.Ordered](m map[K]V) (K, V) {
+	var maxKey K
+	var maxValue V
+	for key, value := range m {
+		if value > maxValue {
+			maxKey = key
+			maxValue = value
+		}
+	}
+	return maxKey, maxValue
 }
 
 func ParseIntSafe(str string) int {
