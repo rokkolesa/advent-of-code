@@ -61,27 +61,25 @@ func findWinnings(input string, containsJoker bool) int {
 	})
 }
 
+var cardStrengths = map[rune]int{
+	'T': 10,
+	//'J': 1 or 11,
+	'Q': 12,
+	'K': 13,
+	'A': 14,
+}
+
 func findStrengths(handString string, containsJoker bool) (strengths []int) {
+	cardStrengths['J'] = 1
+	if !containsJoker {
+		cardStrengths['J'] += 10
+	}
 	for _, card := range handString {
 		var cardStrength int
 		if unicode.IsDigit(card) {
 			cardStrength = shared.ParseIntSafe(string(card))
 		} else {
-			switch card {
-			case 'T':
-				cardStrength = 10
-			case 'J':
-				cardStrength = 11
-				if containsJoker {
-					cardStrength = 1
-				}
-			case 'Q':
-				cardStrength = 12
-			case 'K':
-				cardStrength = 13
-			case 'A':
-				cardStrength = 14
-			}
+			cardStrength = cardStrengths[card]
 		}
 		strengths = append(strengths, cardStrength)
 	}
@@ -91,12 +89,7 @@ func findStrengths(handString string, containsJoker bool) (strengths []int) {
 func findHandType(handString string, containsJokers bool) int {
 	var buckets = make(map[rune]int)
 	for _, card := range handString {
-		_, exists := buckets[card]
-		if exists {
-			buckets[card]++
-		} else {
-			buckets[card] = 1
-		}
+		buckets[card]++
 	}
 	if jokers, hasJoker := buckets['J']; hasJoker && containsJokers {
 		delete(buckets, 'J')
@@ -104,19 +97,18 @@ func findHandType(handString string, containsJokers bool) int {
 		buckets[maxCard] += jokers
 	}
 
-	// all distinct - high card
-	if len(buckets) == 5 {
-		return 1
-	}
 	// all the same - five of a kind
 	if len(buckets) == 1 {
 		return 7
 	}
-	// one card is duplicated - one pair
-	if len(buckets) == 4 {
-		return 2
+	if len(buckets) == 2 {
+		// four of a kind
+		if shared.AnyMatch(maps.Values(buckets), func(count int) bool { return count == 4 }) {
+			return 6
+		}
+		// full house
+		return 5
 	}
-	// two pairs, three of a kind
 	if len(buckets) == 3 {
 		// three of a kind
 		if shared.AnyMatch(maps.Values(buckets), func(count int) bool { return count == 3 }) {
@@ -125,12 +117,12 @@ func findHandType(handString string, containsJokers bool) int {
 		// two pairs
 		return 3
 	}
-	// four of a kind
-	if shared.AnyMatch(maps.Values(buckets), func(count int) bool { return count == 4 }) {
-		return 6
+	// one card is duplicated - one pair
+	if len(buckets) == 4 {
+		return 2
 	}
-	// full house
-	return 5
+	// all distinct - high card
+	return 1
 }
 
 func main() {
