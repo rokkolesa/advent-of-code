@@ -81,22 +81,26 @@ func ReduceIndexed[T, U any](slice []T, initialState U, reducer func(U, T, int) 
 	return state
 }
 
-func Sum[T int | float64](slice []T) T {
+func Sum[T int | int64 | float64](slice []T) T {
 	return Reduce(slice, 0, func(state T, element T) T {
 		return state + element
 	})
 }
 
-func Product[T int | float64](slice []T) T {
+func Product[T int | int64 | float64](slice []T) T {
 	return Reduce(slice, 1, func(state T, element T) T {
 		return state * element
 	})
 }
 
 func Map[T any, R any](slice []T, mapper func(T) R) []R {
+	return MapIndexed(slice, func(t T, _ int) R { return mapper(t) })
+}
+
+func MapIndexed[T any, R any](slice []T, mapper func(T, int) R) []R {
 	newSlice := make([]R, len(slice))
 	for i, element := range slice {
-		newSlice[i] = mapper(element)
+		newSlice[i] = mapper(element, i)
 	}
 	return newSlice
 }
