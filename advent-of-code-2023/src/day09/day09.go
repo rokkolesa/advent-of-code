@@ -27,12 +27,11 @@ func part2(input string) int {
 }
 
 func extrapolate(history []int) int {
-	j := len(history) - 1
-	for shared.AnyMatch(history[:j], func(i int) bool { return i != 0 }) {
+	//for j := len(history) - 1; shared.AnyMatch(history[:j], func(i int) bool { return i != 0 }); j-- {
+	for j := len(history) - 1; j > 0; j-- {
 		for i := 0; i < j; i++ {
 			history[i] = history[i+1] - history[i]
 		}
-		j--
 	}
 	return shared.Sum(history)
 }
