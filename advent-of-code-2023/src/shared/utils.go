@@ -39,6 +39,9 @@ func Reverse(s string) string {
 }
 
 func Range(from, to int) (slice []int) {
+	if from > to {
+		from, to = to, from
+	}
 	slice = make([]int, to-from)
 	for i := range slice {
 		slice[i] = i + from
