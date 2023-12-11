@@ -3,6 +3,7 @@ package main
 import (
 	"../shared"
 	_ "embed"
+	"fmt"
 	"slices"
 	"strings"
 )
@@ -117,6 +118,7 @@ func part2(input string) int {
 	}
 
 	insideCount := 0
+	var insideArea []Symbol
 	for y, line := range strings.Split(input, "\n") {
 		inside := false
 		var previousSymbol Symbol
@@ -130,6 +132,7 @@ func part2(input string) int {
 					previousSymbol = currentSymbol
 				}
 			} else if !symbolOnLoop && inside {
+				insideArea = append(insideArea, currentSymbol)
 				insideCount++
 			} else if symbolOnLoop && symbolId != '-' {
 				// ignore dashes as they do not contribute to anything - they retain the same state
@@ -147,7 +150,28 @@ func part2(input string) int {
 			}
 		}
 	}
+	//printMap(pipeMap, loop, insideArea)
 	return insideCount
+}
+
+func printMap(pipeMap [][]Symbol, loop []Symbol, area []Symbol) {
+	fmt.Println()
+
+	for _, line := range pipeMap {
+		for _, symbol := range line {
+			if slices.Contains(loop, symbol) {
+				colored := fmt.Sprintf("\x1b[%dm%s\x1b[0m", 95, symbol.id)
+				fmt.Print(colored)
+			} else if slices.Contains(area, symbol) {
+				colored := fmt.Sprintf("\x1b[%dm%s\x1b[0m", 96, "I")
+				fmt.Print(colored)
+			} else {
+				colored := fmt.Sprintf("\x1b[%dm%s\x1b[0m", 94, "O")
+				fmt.Print(colored)
+			}
+		}
+		fmt.Println()
+	}
 }
 
 func analyzeMap(input string) (pipeMap [][]Symbol, start Symbol, next Symbol) {
