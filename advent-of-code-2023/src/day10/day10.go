@@ -33,23 +33,23 @@ type Symbol struct {
 	shared.Point
 }
 
-func (receiver Symbol) nextFrom(previous shared.Point) (shared.Point, bool) {
+func (receiver Symbol) nextFrom(previous Symbol) (shared.Point, bool) {
 	switch receiver.id {
 	case "-":
 		if receiver.Y != previous.Y {
-			return previous, false
+			return previous.Point, false
 		}
 		// add or remove X
 		return shared.Point{X: receiver.X + (receiver.X - previous.X), Y: receiver.Y}, true
 	case "|":
 		if receiver.X != previous.X {
-			return previous, false
+			return previous.Point, false
 		}
 		// add or remove Y
 		return shared.Point{X: receiver.X, Y: receiver.Y + (receiver.Y - previous.Y)}, true
 	case "L":
 		if previous.X < receiver.X && previous.Y == receiver.Y || previous.Y > receiver.Y && previous.X == receiver.X {
-			return previous, false
+			return previous.Point, false
 		}
 		if receiver.Y != previous.Y {
 			return shared.Point{X: receiver.X + 1, Y: receiver.Y}, true
@@ -58,7 +58,7 @@ func (receiver Symbol) nextFrom(previous shared.Point) (shared.Point, bool) {
 		}
 	case "7":
 		if previous.X > receiver.X && previous.Y == receiver.Y || previous.Y < receiver.Y && previous.X == receiver.X {
-			return previous, false
+			return previous.Point, false
 		}
 		if receiver.Y != previous.Y {
 			return shared.Point{X: receiver.X - 1, Y: receiver.Y}, true
@@ -67,7 +67,7 @@ func (receiver Symbol) nextFrom(previous shared.Point) (shared.Point, bool) {
 		}
 	case "F":
 		if previous.X < receiver.X && previous.Y == receiver.Y || previous.Y < receiver.Y && previous.X == receiver.X {
-			return previous, false
+			return previous.Point, false
 		}
 		if receiver.Y != previous.Y {
 			return shared.Point{X: receiver.X + 1, Y: receiver.Y}, true
@@ -76,7 +76,7 @@ func (receiver Symbol) nextFrom(previous shared.Point) (shared.Point, bool) {
 		}
 	case "J":
 		if previous.X > receiver.X && previous.Y == receiver.Y || previous.Y > receiver.Y && previous.X == receiver.X {
-			return previous, false
+			return previous.Point, false
 		}
 		if receiver.Y != previous.Y {
 			return shared.Point{X: receiver.X - 1, Y: receiver.Y}, true
@@ -86,7 +86,7 @@ func (receiver Symbol) nextFrom(previous shared.Point) (shared.Point, bool) {
 	case "S":
 		return receiver.Point, true
 	default:
-		return previous, false
+		return previous.Point, false
 	}
 }
 
@@ -97,7 +97,7 @@ func part1(input string) int {
 	l := 1
 	for current.id != "S" {
 		next, _ := current.nextFrom(previous)
-		previous = current.Point
+		previous = current
 		current = pipeMap[next.Y][next.X]
 		l++
 	}
@@ -108,10 +108,10 @@ func part1(input string) int {
 func part2(input string) int {
 	pipeMap, previous, current := analyzeMap(input)
 
-	loop := []Symbol{pipeMap[current.Y][current.X]}
+	loop := []Symbol{current}
 	for current.id != "S" {
 		next, _ := current.nextFrom(previous)
-		previous = current.Point
+		previous = current
 		current = pipeMap[next.Y][next.X]
 		loop = append(loop, current)
 	}
@@ -150,17 +150,16 @@ func part2(input string) int {
 	return insideCount
 }
 
-func analyzeMap(input string) ([][]Symbol, shared.Point, Symbol) {
+func analyzeMap(input string) (pipeMap [][]Symbol, start Symbol, next Symbol) {
 	inputLines := strings.Split(input, "\n")
-	pipeMap := make([][]Symbol, len(inputLines))
-	var start shared.Point
+	pipeMap = make([][]Symbol, len(inputLines))
 	for y, line := range inputLines {
 		pipeMap[y] = make([]Symbol, len(line))
-		for x, symbol := range line {
-			point := shared.Point{X: x, Y: y}
-			pipeMap[y][x] = Symbol{id: string(symbol), Point: point}
-			if symbol == 'S' {
-				start = point
+		for x, symbolId := range line {
+			symbol := Symbol{id: string(symbolId), Point: shared.Point{X: x, Y: y}}
+			pipeMap[y][x] = symbol
+			if symbolId == 'S' {
+				start = symbol
 			}
 		}
 	}
@@ -175,11 +174,11 @@ func analyzeMap(input string) ([][]Symbol, shared.Point, Symbol) {
 		func(p shared.Point) Symbol { return pipeMap[p.Y][p.X] })
 
 	// it doesn't matter which step we take, as long as it is the correct one
-	next := shared.Filter(possibleNexts, func(point Symbol) bool {
+	next = shared.Filter(possibleNexts, func(point Symbol) bool {
 		_, possible := point.nextFrom(start)
 		return possible
 	})[0]
-	return pipeMap, start, next
+	return
 }
 
 func main() {
