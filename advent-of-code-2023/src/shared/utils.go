@@ -165,9 +165,20 @@ func ParseInts(input string) []int {
 	return ParseFunc(input, ParseIntSafe)
 }
 
+func ParseIntsSep(input string, sep rune) []int {
+	return ParseFuncSep(input, sep, ParseIntSafe)
+}
+
 func ParseFunc[T any](input string, parseFunc func(string) T) []T {
 	return Map(
 		strings.Fields(strings.TrimSpace(input)),
+		parseFunc,
+	)
+}
+
+func ParseFuncSep[T any](input string, sep rune, parseFunc func(string) T) []T {
+	return Map(
+		strings.FieldsFunc(strings.TrimSpace(input), func(r rune) bool { return r == sep }),
 		parseFunc,
 	)
 }
