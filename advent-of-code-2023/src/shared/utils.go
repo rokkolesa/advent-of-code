@@ -190,3 +190,13 @@ func ParseFuncAfter[T any](input string, after string, parseFunc func(string) T)
 func DeleteSpaces(input string) string {
 	return strings.ReplaceAll(input, " ", "")
 }
+
+func Transpose(a []string) (b []string) {
+	b = make([]string, len(a[0]))
+	for _, s := range a {
+		for j, c := range s {
+			b[j] += string(c)
+		}
+	}
+	return
+}
