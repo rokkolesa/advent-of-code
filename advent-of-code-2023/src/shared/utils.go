@@ -54,20 +54,29 @@ type Point struct {
 	Y int
 }
 
-func (p Point) Adjacent() []Point {
+func (thisPoint Point) Adjacent() []Point {
 	return []Point{
 		// left-right
-		{X: p.X - 1, Y: p.Y},
-		{X: p.X + 1, Y: p.Y},
+		{X: thisPoint.X - 1, Y: thisPoint.Y},
+		{X: thisPoint.X + 1, Y: thisPoint.Y},
 		// top-bottom
-		{X: p.X, Y: p.Y + 1},
-		{X: p.X, Y: p.Y - 1},
+		{X: thisPoint.X, Y: thisPoint.Y + 1},
+		{X: thisPoint.X, Y: thisPoint.Y - 1},
 		// diagonals
-		{X: p.X - 1, Y: p.Y - 1},
-		{X: p.X + 1, Y: p.Y - 1},
-		{X: p.X + 1, Y: p.Y + 1},
-		{X: p.X - 1, Y: p.Y + 1},
+		{X: thisPoint.X - 1, Y: thisPoint.Y - 1},
+		{X: thisPoint.X + 1, Y: thisPoint.Y - 1},
+		{X: thisPoint.X + 1, Y: thisPoint.Y + 1},
+		{X: thisPoint.X - 1, Y: thisPoint.Y + 1},
 	}
+}
+func (thisPoint Point) Plus(other Point) Point {
+	return Point{
+		X: thisPoint.X + other.X,
+		Y: thisPoint.Y + other.Y,
+	}
+}
+func (thisPoint Point) Negative() Point {
+	return Point{X: -thisPoint.X, Y: -thisPoint.Y}
 }
 
 func Reduce[T, U any](slice []T, initialState U, reducer func(U, T) U) U {

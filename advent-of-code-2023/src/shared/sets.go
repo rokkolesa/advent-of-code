@@ -2,7 +2,7 @@ package shared
 
 import (
 	"fmt"
-	"maps"
+	maps "golang.org/x/exp/maps"
 )
 
 type SetType[T comparable] interface {
@@ -17,6 +17,8 @@ type SetType[T comparable] interface {
 	Clear()
 	Intersection(other SetType[T]) SetType[T]
 	Union(other SetType[T]) SetType[T]
+
+	ToSlice() []T
 }
 
 type set[T comparable] struct {
@@ -88,6 +90,10 @@ func (receiver set[T]) Union(other SetType[T]) SetType[T] {
 		clone[element] = true
 	}
 	return set[T]{data: &clone}
+}
+
+func (receiver set[T]) ToSlice() []T {
+	return maps.Keys(receiver.internalData())
 }
 
 func (receiver set[T]) String() string {
