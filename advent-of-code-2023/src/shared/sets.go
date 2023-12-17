@@ -47,17 +47,21 @@ func (receiver set[T]) Add(elements ...T) {
 		(*receiver.data)[element] = true
 	}
 }
+
 func (receiver set[T]) Remove(elements ...T) {
 	for _, element := range elements {
 		delete(*receiver.data, element)
 	}
 }
+
 func (receiver set[T]) Contains(element T) bool {
 	return (*receiver.data)[element]
 }
+
 func (receiver set[T]) IsEmpty() bool {
 	return receiver.Len() == 0
 }
+
 func (receiver set[T]) Clear() {
 	fmt.Println("Before clear", receiver.data)
 	*receiver.data = make(map[T]bool)

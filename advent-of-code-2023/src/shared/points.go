@@ -20,6 +20,7 @@ func (thisPoint Point) Adjacent() []Point {
 		{X: thisPoint.X - 1, Y: thisPoint.Y + 1},
 	}
 }
+
 func (thisPoint Point) Plus(other Point) Point {
 	return Point{
 		X: thisPoint.X + other.X,
@@ -34,6 +35,7 @@ func (thisPoint Point) Negative() Point {
 func (thisPoint Point) Move(direction string) Point {
 	return thisPoint.Plus(Unit(direction))
 }
+
 func Unit(direction string) Point {
 	switch direction {
 	case "R":

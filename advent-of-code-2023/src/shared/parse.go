@@ -9,10 +9,12 @@ func ParseIntSafe(str string) int {
 	parsed, _ := strconv.Atoi(str)
 	return parsed
 }
+
 func ParseInt64Safe(str string) int64 {
 	parsed, _ := strconv.ParseInt(str, 10, 64)
 	return parsed
 }
+
 func ParseFloatSafe(str string) float64 {
 	parsed, _ := strconv.ParseFloat(str, 64)
 	return parsed
@@ -21,6 +23,7 @@ func ParseFloatSafe(str string) float64 {
 func ParseIntsAfter(input string, after string) []int {
 	return ParseFuncAfter(input, after, ParseIntSafe)
 }
+
 func ParseInts(input string) []int {
 	return ParseFunc(input, ParseIntSafe)
 }
