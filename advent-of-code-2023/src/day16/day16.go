@@ -4,7 +4,6 @@ import (
 	. "../shared"
 	_ "embed"
 	"slices"
-	"strings"
 )
 
 //go:embed day16_sample.txt
@@ -16,22 +15,6 @@ var input string
 type Beam struct {
 	direction string
 	Point
-}
-
-type Layout [][]string
-
-func unit(direction string) Point {
-	switch direction {
-	case "R":
-		return Point{X: 1, Y: 0}
-	case "L":
-		return Point{X: -1, Y: 0}
-	case "U":
-		return Point{X: 0, Y: -1}
-	case "D":
-		return Point{X: 0, Y: 1}
-	}
-	panic("Unknown direction!")
 }
 
 func (thisBeam Beam) next(symbol string) []Beam {
@@ -72,7 +55,6 @@ func (thisBeam Beam) next(symbol string) []Beam {
 			return thisBeam.move(thisBeam.direction)
 		} else {
 			return thisBeam.move("U", "D")
-
 		}
 	}
 	return []Beam{}
@@ -82,12 +64,12 @@ func (thisBeam Beam) move(directions ...string) []Beam {
 	return Map(directions, func(direction string) Beam {
 		return Beam{
 			direction: direction,
-			Point:     thisBeam.Plus(unit(direction)),
+			Point:     thisBeam.Move(direction),
 		}
 	})
 }
 
-func (layout Layout) energyFrom(start Beam) int {
+func energyFrom(layout Layout, start Beam) int {
 	beamHistory := Set[Beam](start)
 	var queue = []Beam{start}
 
@@ -96,7 +78,7 @@ func (layout Layout) energyFrom(start Beam) int {
 		queue = queue[1:]
 
 		nextBeams := beam.next(layout[beam.Y][beam.X])
-		nextBeams = Filter(nextBeams, func(b Beam) bool { return !beamHistory.Contains(b) && layout.inBounds(b) })
+		nextBeams = Filter(nextBeams, func(b Beam) bool { return !beamHistory.Contains(b) && layout.InBounds(b.Point) })
 		beamHistory.Add(nextBeams...)
 
 		queue = append(queue, nextBeams...)
@@ -110,38 +92,20 @@ func (layout Layout) energyFrom(start Beam) int {
 	).Len()
 }
 
-func (layout Layout) inBounds(b Beam) bool {
-	yBound := len(layout)
-	xBound := len(layout[0])
-	return 0 <= b.Y && b.Y < yBound && 0 <= b.X && b.X < xBound
-}
-
-func parseLayout(input string) Layout {
-	lines := strings.Split(input, "\n")
-	layout := make(Layout, len(lines))
-	for y, line := range lines {
-		layout[y] = make([]string, len(line))
-		for x, char := range line {
-			layout[y][x] = string(char)
-		}
-	}
-	return layout
-}
-
 func part1(input string) int {
-	layout := parseLayout(input)
-	return layout.energyFrom(Beam{direction: "R", Point: Point{}})
+	layout := ParseLayout(input)
+	return energyFrom(layout, Beam{direction: "R", Point: Point{}})
 }
 func part2(input string) (sum int) {
-	layout := parseLayout(input)
+	layout := ParseLayout(input)
 	var energies []int
 	for i := 0; i < len(layout); i++ {
-		energies = append(energies, layout.energyFrom(Beam{direction: "R", Point: Point{X: 0, Y: i}}))
-		energies = append(energies, layout.energyFrom(Beam{direction: "L", Point: Point{X: 0, Y: len(layout[0]) - 1}}))
+		energies = append(energies, energyFrom(layout, Beam{direction: "R", Point: Point{X: 0, Y: i}}))
+		energies = append(energies, energyFrom(layout, Beam{direction: "L", Point: Point{X: 0, Y: len(layout[0]) - 1}}))
 	}
 	for i := 0; i < len(layout[0]); i++ {
-		energies = append(energies, layout.energyFrom(Beam{direction: "D", Point: Point{X: i, Y: 0}}))
-		energies = append(energies, layout.energyFrom(Beam{direction: "U", Point: Point{X: len(layout[0]) - 1, Y: 0}}))
+		energies = append(energies, energyFrom(layout, Beam{direction: "D", Point: Point{X: i, Y: 0}}))
+		energies = append(energies, energyFrom(layout, Beam{direction: "U", Point: Point{X: len(layout[0]) - 1, Y: 0}}))
 	}
 	return slices.Max(energies)
 }

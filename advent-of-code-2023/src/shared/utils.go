@@ -3,7 +3,6 @@ package shared
 import (
 	"cmp"
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -49,99 +48,6 @@ func Range(from, to int) (slice []int) {
 	return
 }
 
-type Point struct {
-	X int
-	Y int
-}
-
-func (thisPoint Point) Adjacent() []Point {
-	return []Point{
-		// left-right
-		{X: thisPoint.X - 1, Y: thisPoint.Y},
-		{X: thisPoint.X + 1, Y: thisPoint.Y},
-		// top-bottom
-		{X: thisPoint.X, Y: thisPoint.Y + 1},
-		{X: thisPoint.X, Y: thisPoint.Y - 1},
-		// diagonals
-		{X: thisPoint.X - 1, Y: thisPoint.Y - 1},
-		{X: thisPoint.X + 1, Y: thisPoint.Y - 1},
-		{X: thisPoint.X + 1, Y: thisPoint.Y + 1},
-		{X: thisPoint.X - 1, Y: thisPoint.Y + 1},
-	}
-}
-func (thisPoint Point) Plus(other Point) Point {
-	return Point{
-		X: thisPoint.X + other.X,
-		Y: thisPoint.Y + other.Y,
-	}
-}
-func (thisPoint Point) Negative() Point {
-	return Point{X: -thisPoint.X, Y: -thisPoint.Y}
-}
-
-func Reduce[T, U any](slice []T, initialState U, reducer func(U, T) U) U {
-	return ReduceIndexed(slice, initialState, func(state U, element T, _ int) U {
-		return reducer(state, element)
-	})
-}
-
-func ReduceIndexed[T, U any](slice []T, initialState U, reducer func(U, T, int) U) U {
-	state := initialState
-	for i, element := range slice {
-		state = reducer(state, element, i)
-	}
-	return state
-}
-
-func Sum[T int | int64 | float64](slice []T) T {
-	return Reduce(slice, 0, func(state T, element T) T {
-		return state + element
-	})
-}
-
-func Product[T int | int64 | float64](slice []T) T {
-	return Reduce(slice, 1, func(state T, element T) T {
-		return state * element
-	})
-}
-
-func Map[T any, R any](slice []T, mapper func(T) R) []R {
-	return MapIndexed(slice, func(t T, _ int) R { return mapper(t) })
-}
-
-func MapIndexed[T any, R any](slice []T, mapper func(T, int) R) []R {
-	newSlice := make([]R, len(slice))
-	for i, element := range slice {
-		newSlice[i] = mapper(element, i)
-	}
-	return newSlice
-}
-
-func Filter[T any](slice []T, filter func(T) bool) []T {
-	var newSlice []T
-	for _, element := range slice {
-		if filter(element) {
-			newSlice = append(newSlice, element)
-		}
-	}
-	return newSlice
-}
-
-func AnyMatch[T any](slice []T, test func(T) bool) bool {
-	for _, element := range slice {
-		if test(element) {
-			return true
-		}
-	}
-	return false
-}
-
-func AllMatch[T any](slice []T, test func(T) bool) bool {
-	return !AnyMatch(slice, func(element T) bool {
-		return !test(element)
-	})
-}
-
 func MaxEntryByValue[K comparable, V cmp.Ordered](m map[K]V) (K, V) {
 	var maxKey K
 	var maxValue V
@@ -152,48 +58,6 @@ func MaxEntryByValue[K comparable, V cmp.Ordered](m map[K]V) (K, V) {
 		}
 	}
 	return maxKey, maxValue
-}
-
-func ParseIntSafe(str string) int {
-	parsed, _ := strconv.Atoi(str)
-	return parsed
-}
-func ParseInt64Safe(str string) int64 {
-	parsed, _ := strconv.ParseInt(str, 10, 64)
-	return parsed
-}
-func ParseFloatSafe(str string) float64 {
-	parsed, _ := strconv.ParseFloat(str, 64)
-	return parsed
-}
-
-func ParseIntsAfter(input string, after string) []int {
-	return ParseFuncAfter(input, after, ParseIntSafe)
-}
-func ParseInts(input string) []int {
-	return ParseFunc(input, ParseIntSafe)
-}
-
-func ParseIntsSep(input string, sep rune) []int {
-	return ParseFuncSep(input, sep, ParseIntSafe)
-}
-
-func ParseFunc[T any](input string, parseFunc func(string) T) []T {
-	return Map(
-		strings.Fields(strings.TrimSpace(input)),
-		parseFunc,
-	)
-}
-
-func ParseFuncSep[T any](input string, sep rune, parseFunc func(string) T) []T {
-	return Map(
-		strings.FieldsFunc(strings.TrimSpace(input), func(r rune) bool { return r == sep }),
-		parseFunc,
-	)
-}
-
-func ParseFuncAfter[T any](input string, after string, parseFunc func(string) T) []T {
-	return ParseFunc(input[strings.Index(input, after)+1:], parseFunc)
 }
 
 func DeleteSpaces(input string) string {
@@ -208,4 +72,24 @@ func Transpose(a []string) (b []string) {
 		}
 	}
 	return
+}
+
+type Layout [][]string
+
+func (layout Layout) InBounds(p Point) bool {
+	yBound := len(layout)
+	xBound := len(layout[0])
+	return 0 <= p.Y && p.Y < yBound && 0 <= p.X && p.X < xBound
+}
+
+func ParseLayout(input string) Layout {
+	lines := strings.Split(input, "\n")
+	layout := make(Layout, len(lines))
+	for y, line := range lines {
+		layout[y] = make([]string, len(line))
+		for x, char := range line {
+			layout[y][x] = string(char)
+		}
+	}
+	return layout
 }
