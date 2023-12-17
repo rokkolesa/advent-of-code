@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../shared"
+	. "../shared"
 	_ "embed"
 	"strconv"
 	"strings"
@@ -67,7 +67,7 @@ func getFirstValue(line string, shouldReverse bool) int {
 		numbersMap = reverseNumbers
 	}
 	if shouldReverse {
-		line = shared.Reverse(line)
+		line = Reverse(line)
 	}
 	var leftIndex = len(line) + 1
 	var leftVerboseNumber string
@@ -102,16 +102,16 @@ func findFirstAndLastDigit(line string) (int, int) {
 }
 
 func main() {
-	shared.Check("Part 1", 142, func() int {
+	Check("Part 1", 142, func() int {
 		return part1(sample1)
 	})
-	shared.Check("Part 1", 54667, func() int {
+	Check("Part 1", 54667, func() int {
 		return part1(input)
 	})
-	shared.Check("Part 2", 281, func() int {
+	Check("Part 2", 281, func() int {
 		return part2(sample2)
 	})
-	shared.Check("Part 2", 54203, func() int {
+	Check("Part 2", 54203, func() int {
 		return part2(input)
 	})
 }

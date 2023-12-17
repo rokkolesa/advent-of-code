@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../shared"
+	. "../shared"
 	_ "embed"
 	"math"
 	"strings"
@@ -17,14 +17,14 @@ func part1(input string) int {
 	split := strings.Split(input, "\n")
 
 	// parse as floats as it will come in handy later
-	times := shared.ParseFuncAfter(split[0], ":", shared.ParseFloatSafe)
-	distances := shared.ParseFuncAfter(split[1], ":", shared.ParseFloatSafe)
+	times := ParseFuncAfter(split[0], ":", ParseFloatSafe)
+	distances := ParseFuncAfter(split[1], ":", ParseFloatSafe)
 
 	return winScenarios(times, distances)
 }
 
 func part2(input string) int {
-	return part1(shared.DeleteSpaces(input))
+	return part1(DeleteSpaces(input))
 }
 
 func winScenarios(times []float64, distances []float64) int {
@@ -50,20 +50,20 @@ func winScenarios(times []float64, distances []float64) int {
 		scenarios[i] = lastPossibleWin - firstPossibleWin + 1
 	}
 
-	return shared.Product(scenarios)
+	return Product(scenarios)
 }
 
 func main() {
-	shared.Check("Part 1", 288, func() int {
+	Check("Part 1", 288, func() int {
 		return part1(sample)
 	})
-	shared.Check("Part 1", 281600, func() int {
+	Check("Part 1", 281600, func() int {
 		return part1(input)
 	})
-	shared.Check("Part 2", 71503, func() int {
+	Check("Part 2", 71503, func() int {
 		return part2(sample)
 	})
-	shared.Check("Part 2", 33875953, func() int {
+	Check("Part 2", 33875953, func() int {
 		return part2(input)
 	})
 }

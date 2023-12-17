@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../shared"
+	. "../shared"
 	_ "embed"
 	"slices"
 	"strings"
@@ -14,7 +14,7 @@ var sample string
 var input string
 
 func part1(input string) int {
-	return shared.Reduce(
+	return Reduce(
 		strings.Split(input, ","),
 		0,
 		func(sum int, step string) int { return sum + hash(step) },
@@ -42,7 +42,7 @@ func part2(input string) (sum int) {
 		if strings.Contains(step, "=") {
 			stepSplit := strings.Split(step, "=")
 			label := stepSplit[0]
-			value := shared.ParseIntSafe(stepSplit[1])
+			value := ParseIntSafe(stepSplit[1])
 			labelHash := hash(label)
 
 			// if the box exists and the label does not => append the Lens
@@ -74,16 +74,16 @@ func part2(input string) (sum int) {
 }
 
 func main() {
-	shared.Check("Part 1", 1320, func() int {
+	Check("Part 1", 1320, func() int {
 		return part1(sample)
 	})
-	shared.Check("Part 1", 510792, func() int {
+	Check("Part 1", 510792, func() int {
 		return part1(input)
 	})
-	shared.Check("Part 2", 145, func() int {
+	Check("Part 2", 145, func() int {
 		return part2(sample)
 	})
-	shared.Check("Part 2", 269410, func() int {
+	Check("Part 2", 269410, func() int {
 		return part2(input)
 	})
 }

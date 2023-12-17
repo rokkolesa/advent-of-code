@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../shared"
+	. "../shared"
 	_ "embed"
 	"fmt"
 	"regexp"
@@ -92,7 +92,7 @@ func part2(input string) int64 {
 
 		lowestLocations = append(
 			lowestLocations,
-			slices.Min(shared.Map(currentIntervals, func(interval Interval) int64 { return interval.from })),
+			slices.Min(Map(currentIntervals, func(interval Interval) int64 { return interval.from })),
 		)
 	}
 	return slices.Min(lowestLocations)
@@ -104,7 +104,7 @@ type ProcessedInterval struct {
 }
 
 func splitIntervals(currentIntervals []Interval, almanacMap *AlmanacMap) []Interval {
-	newIntervals := shared.Map(currentIntervals, func(interval Interval) ProcessedInterval { return ProcessedInterval{interval, false} })
+	newIntervals := Map(currentIntervals, func(interval Interval) ProcessedInterval { return ProcessedInterval{interval, false} })
 	for _, almanacEntry := range almanacMap.entries {
 		for i, currentInterval := range newIntervals {
 			if !currentInterval.processed {
@@ -112,7 +112,7 @@ func splitIntervals(currentIntervals []Interval, almanacMap *AlmanacMap) []Inter
 			}
 		}
 	}
-	return shared.Map(newIntervals, func(processed ProcessedInterval) Interval { return processed.interval })
+	return Map(newIntervals, func(processed ProcessedInterval) Interval { return processed.interval })
 }
 
 func splitInterval(processedInterval ProcessedInterval, almanacEntry AlmanacMapEntry) []ProcessedInterval {
@@ -156,7 +156,7 @@ func splitInterval(processedInterval ProcessedInterval, almanacEntry AlmanacMapE
 func getAlmanac(input string) (seeds []int64, almanacMaps map[string]*AlmanacMap) {
 	seedsAndMaps := strings.SplitN(input, "\n\n", 2)
 
-	seeds = shared.ParseFuncAfter(seedsAndMaps[0], ":", shared.ParseInt64Safe)
+	seeds = ParseFuncAfter(seedsAndMaps[0], ":", ParseInt64Safe)
 
 	almanacMapIdRegex, _ := regexp.Compile("(.*)-to-(.*) map:")
 	almanacMaps = make(map[string]*AlmanacMap)
@@ -169,7 +169,7 @@ func getAlmanac(input string) (seeds []int64, almanacMaps map[string]*AlmanacMap
 				almanacMap.source = almanacMapIds[1]
 				almanacMap.target = almanacMapIds[2]
 			} else {
-				almanacMapEntryDef := shared.ParseFunc(almanacMapDef, shared.ParseInt64Safe)
+				almanacMapEntryDef := ParseFunc(almanacMapDef, ParseInt64Safe)
 
 				almanacMap.entries = append(almanacMap.entries, AlmanacMapEntry{
 					destinationStart: almanacMapEntryDef[0],
@@ -185,16 +185,16 @@ func getAlmanac(input string) (seeds []int64, almanacMaps map[string]*AlmanacMap
 }
 
 func main() {
-	shared.Check("Part 1", 35, func() int64 {
+	Check("Part 1", 35, func() int64 {
 		return part1(sample)
 	})
-	shared.Check("Part 1", 379811651, func() int64 {
+	Check("Part 1", 379811651, func() int64 {
 		return part1(input)
 	})
-	shared.Check("Part 2", 46, func() int64 {
+	Check("Part 2", 46, func() int64 {
 		return part2(sample)
 	})
-	shared.Check("Part 2", 27992443, func() int64 {
+	Check("Part 2", 27992443, func() int64 {
 		return part2(input)
 	})
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../shared"
+	. "../shared"
 	_ "embed"
 	"golang.org/x/exp/maps"
 	"regexp"
@@ -34,18 +34,18 @@ func part1(input string) int {
 func part2(input string) int {
 	directions, nodes := findDirections(input)
 
-	currentNodes := shared.Filter(maps.Keys(nodes), func(s string) bool { return lastRune(s) == 'A' })
+	currentNodes := Filter(maps.Keys(nodes), func(s string) bool { return lastRune(s) == 'A' })
 	pathToZ := make([]int, len(currentNodes))
-	for i := 0; shared.AnyMatch(pathToZ, func(i int) bool { return i == 0 }); i++ {
+	for i := 0; AnyMatch(pathToZ, func(i int) bool { return i == 0 }); i++ {
 		direction := directions[i%len(directions)]
-		currentNodes = shared.Map(currentNodes, func(node string) string { return nodes[node][direction] })
+		currentNodes = Map(currentNodes, func(node string) string { return nodes[node][direction] })
 		for n, currentNode := range currentNodes {
 			if lastRune(currentNode) == 'Z' {
 				pathToZ[n] = i + 1
 			}
 		}
 	}
-	return shared.Reduce(pathToZ, pathToZ[0], lcm)
+	return Reduce(pathToZ, pathToZ[0], lcm)
 }
 
 func lastRune(s string) rune {
@@ -79,19 +79,19 @@ func findDirections(input string) (directions []rune, nodes map[string]map[rune]
 }
 
 func main() {
-	shared.Check("Part 1, 1", 2, func() int {
+	Check("Part 1, 1", 2, func() int {
 		return part1(sample11)
 	})
-	shared.Check("Part 1, 2", 6, func() int {
+	Check("Part 1, 2", 6, func() int {
 		return part1(sample12)
 	})
-	shared.Check("Part 1", 12643, func() int {
+	Check("Part 1", 12643, func() int {
 		return part1(input)
 	})
-	shared.Check("Part 2", 6, func() int {
+	Check("Part 2", 6, func() int {
 		return part2(sample2)
 	})
-	shared.Check("Part 2", 13133452426987, func() int {
+	Check("Part 2", 13133452426987, func() int {
 		return part2(input)
 	})
 }

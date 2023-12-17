@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../shared"
+	. "../shared"
 	_ "embed"
 	"golang.org/x/exp/maps"
 	"slices"
@@ -30,12 +30,12 @@ func part2(input string) int {
 }
 
 func findWinnings(input string, containsJoker bool) int {
-	hands := shared.Map(
+	hands := Map(
 		strings.Split(input, "\n"),
 		func(str string) Hand {
 			fields := strings.Fields(str)
 			handType := findHandType(fields[0], containsJoker)
-			bid := shared.ParseIntSafe(fields[1])
+			bid := ParseIntSafe(fields[1])
 			return Hand{
 				strengths: findStrengths(fields[0], containsJoker),
 				handType:  handType,
@@ -56,7 +56,7 @@ func findWinnings(input string, containsJoker bool) int {
 		return 0
 	})
 
-	return shared.ReduceIndexed(hands, 0, func(state int, hand Hand, i int) int {
+	return ReduceIndexed(hands, 0, func(state int, hand Hand, i int) int {
 		return state + hand.bid*(i+1)
 	})
 }
@@ -77,7 +77,7 @@ func findStrengths(handString string, containsJoker bool) (strengths []int) {
 	for _, card := range handString {
 		var cardStrength int
 		if unicode.IsDigit(card) {
-			cardStrength = shared.ParseIntSafe(string(card))
+			cardStrength = ParseIntSafe(string(card))
 		} else {
 			cardStrength = cardStrengths[card]
 		}
@@ -93,7 +93,7 @@ func findHandType(handString string, containsJokers bool) int {
 	}
 	if jokers, hasJoker := buckets['J']; hasJoker && containsJokers {
 		delete(buckets, 'J')
-		maxCard, _ := shared.MaxEntryByValue(buckets)
+		maxCard, _ := MaxEntryByValue(buckets)
 		buckets[maxCard] += jokers
 	}
 
@@ -103,7 +103,7 @@ func findHandType(handString string, containsJokers bool) int {
 	}
 	if len(buckets) == 2 {
 		// four of a kind
-		if shared.AnyMatch(maps.Values(buckets), func(count int) bool { return count == 4 }) {
+		if AnyMatch(maps.Values(buckets), func(count int) bool { return count == 4 }) {
 			return 6
 		}
 		// full house
@@ -111,7 +111,7 @@ func findHandType(handString string, containsJokers bool) int {
 	}
 	if len(buckets) == 3 {
 		// three of a kind
-		if shared.AnyMatch(maps.Values(buckets), func(count int) bool { return count == 3 }) {
+		if AnyMatch(maps.Values(buckets), func(count int) bool { return count == 3 }) {
 			return 4
 		}
 		// two pairs
@@ -126,16 +126,16 @@ func findHandType(handString string, containsJokers bool) int {
 }
 
 func main() {
-	shared.Check("Part 1", 6440, func() int {
+	Check("Part 1", 6440, func() int {
 		return part1(sample)
 	})
-	shared.Check("Part 1", 255048101, func() int {
+	Check("Part 1", 255048101, func() int {
 		return part1(input)
 	})
-	shared.Check("Part 2", 5905, func() int {
+	Check("Part 2", 5905, func() int {
 		return part2(sample)
 	})
-	shared.Check("Part 2", 253718286, func() int {
+	Check("Part 2", 253718286, func() int {
 		return part2(input)
 	})
 }

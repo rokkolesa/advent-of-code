@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../shared"
+	. "../shared"
 	_ "embed"
 	"slices"
 	"strings"
@@ -14,16 +14,16 @@ var sample string
 var input string
 
 func part1(input string) int {
-	history := shared.Map(strings.Split(input, "\n"), shared.ParseInts)
-	return shared.Sum(shared.Map(history, extrapolate))
+	history := Map(strings.Split(input, "\n"), ParseInts)
+	return Sum(Map(history, extrapolate))
 }
 
 func part2(input string) int {
-	history := shared.Map(strings.Split(input, "\n"), shared.ParseInts)
+	history := Map(strings.Split(input, "\n"), ParseInts)
 	for _, h := range history {
 		slices.Reverse(h)
 	}
-	return shared.Sum(shared.Map(history, extrapolate))
+	return Sum(Map(history, extrapolate))
 }
 
 func extrapolate(history []int) int {
@@ -33,20 +33,20 @@ func extrapolate(history []int) int {
 			history[i] = history[i+1] - history[i]
 		}
 	}
-	return shared.Sum(history)
+	return Sum(history)
 }
 
 func main() {
-	shared.Check("Part 1", 114, func() int {
+	Check("Part 1", 114, func() int {
 		return part1(sample)
 	})
-	shared.Check("Part 1", 1972648895, func() int {
+	Check("Part 1", 1972648895, func() int {
 		return part1(input)
 	})
-	shared.Check("Part 2", 2, func() int {
+	Check("Part 2", 2, func() int {
 		return part2(sample)
 	})
-	shared.Check("Part 2", 919, func() int {
+	Check("Part 2", 919, func() int {
 		return part2(input)
 	})
 }

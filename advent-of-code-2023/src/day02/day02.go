@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../shared"
+	. "../shared"
 	_ "embed"
 	"strconv"
 	"strings"
@@ -74,16 +74,16 @@ func parseAndCheck(game string, action func(string, int) bool) bool {
 }
 
 func main() {
-	shared.Check("Part 1", 8, func() int {
+	Check("Part 1", 8, func() int {
 		return part1(sample)
 	})
-	shared.Check("Part 1", 2810, func() int {
+	Check("Part 1", 2810, func() int {
 		return part1(input)
 	})
-	shared.Check("Part 2", 2286, func() int {
+	Check("Part 2", 2286, func() int {
 		return part2(sample)
 	})
-	shared.Check("Part 2", 69110, func() int {
+	Check("Part 2", 69110, func() int {
 		return part2(input)
 	})
 }

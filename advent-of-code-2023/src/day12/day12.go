@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../shared"
+	. "../shared"
 	_ "embed"
 	"fmt"
 	"slices"
@@ -20,13 +20,13 @@ func memoKey(configuration string, numberConfiguration []int, operational bool, 
 }
 
 func part1(input string) int {
-	return shared.Sum(shared.Map(strings.Split(input, "\n"), possibleSprings))
+	return Sum(Map(strings.Split(input, "\n"), possibleSprings))
 }
 
 func possibleSprings(line string) int {
 	springDefinition := strings.Fields(line)
 	configuration := springDefinition[0]
-	numberConfiguration := shared.ParseIntsSep(springDefinition[1], ',')
+	numberConfiguration := ParseIntsSep(springDefinition[1], ',')
 	previousResults := make(map[string]int)
 	combinations := possibleCombinations(configuration, numberConfiguration, false, false, previousResults)
 	return combinations
@@ -118,9 +118,9 @@ func isValid(configuration string, numberConfiguration []int) bool {
 }
 
 func part2(input string) int {
-	return shared.Sum(
-		shared.Map(
-			shared.Map(
+	return Sum(
+		Map(
+			Map(
 				strings.Split(input, "\n"),
 				func(line string) string {
 					springDefinition := strings.Fields(line)
@@ -139,16 +139,16 @@ func part2(input string) int {
 }
 
 func main() {
-	shared.Check("Part 1", 21, func() int {
+	Check("Part 1", 21, func() int {
 		return part1(sample)
 	})
-	shared.Check("Part 1", 7857, func() int {
+	Check("Part 1", 7857, func() int {
 		return part1(input)
 	})
-	shared.Check("Part 2", 525152, func() int {
+	Check("Part 2", 525152, func() int {
 		return part2(sample)
 	})
-	shared.Check("Part 2", 28606137449920, func() int {
+	Check("Part 2", 28606137449920, func() int {
 		return part2(input)
 	})
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../shared"
+	. "../shared"
 	_ "embed"
 	"math"
 	"slices"
@@ -20,22 +20,22 @@ type machinePart struct {
 	y     int
 }
 
-func (part machinePart) adjacent() (points []shared.Point) {
+func (part machinePart) adjacent() (points []Point) {
 	// left-right
-	points = append(points, shared.Point{X: part.xs[0] - 1, Y: part.y}, shared.Point{X: part.xs[len(part.xs)-1] + 1, Y: part.y})
+	points = append(points, Point{X: part.xs[0] - 1, Y: part.y}, Point{X: part.xs[len(part.xs)-1] + 1, Y: part.y})
 	// top-bottom
-	topBottom := make([]shared.Point, 2*len(part.xs))
+	topBottom := make([]Point, 2*len(part.xs))
 	for i := 0; i < len(part.xs); i++ {
-		topBottom[i] = shared.Point{X: part.xs[i], Y: part.y + 1}
-		topBottom[i+len(part.xs)] = shared.Point{X: part.xs[i], Y: part.y - 1}
+		topBottom[i] = Point{X: part.xs[i], Y: part.y + 1}
+		topBottom[i+len(part.xs)] = Point{X: part.xs[i], Y: part.y - 1}
 	}
 	points = append(points, topBottom...)
 	// diagonals
 	points = append(points,
-		shared.Point{X: part.xs[0] - 1, Y: part.y - 1},
-		shared.Point{X: part.xs[len(part.xs)-1] + 1, Y: part.y - 1},
-		shared.Point{X: part.xs[len(part.xs)-1] + 1, Y: part.y + 1},
-		shared.Point{X: part.xs[0] - 1, Y: part.y + 1},
+		Point{X: part.xs[0] - 1, Y: part.y - 1},
+		Point{X: part.xs[len(part.xs)-1] + 1, Y: part.y - 1},
+		Point{X: part.xs[len(part.xs)-1] + 1, Y: part.y + 1},
+		Point{X: part.xs[0] - 1, Y: part.y + 1},
 	)
 	return points
 }
@@ -78,20 +78,20 @@ func part2(input string) int {
 			cards[cardId+1+i] += cards[cardId] + 1
 		}
 	}
-	return shared.Sum(cards) + len(cards)
+	return Sum(cards) + len(cards)
 }
 
 func main() {
-	shared.Check("Part 1", 13, func() int {
+	Check("Part 1", 13, func() int {
 		return part1(sample)
 	})
-	shared.Check("Part 1", 15205, func() int {
+	Check("Part 1", 15205, func() int {
 		return part1(input)
 	})
-	shared.Check("Part 2", 30, func() int {
+	Check("Part 2", 30, func() int {
 		return part2(sample)
 	})
-	shared.Check("Part 2", 6189740, func() int {
+	Check("Part 2", 6189740, func() int {
 		return part2(input)
 	})
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../shared"
+	. "../shared"
 	_ "embed"
 	"strings"
 )
@@ -56,7 +56,7 @@ func findMirrorSplits(input string, smudgeable bool) int {
 		horizontalOffset, horizontalSmudged := splitOffset(mirrorLines, smudgeable)
 		if horizontalSmudged {
 			sum += 100 * horizontalOffset
-		} else if verticalOffset, verticalSmudged := splitOffset(shared.Transpose(mirrorLines), smudgeable); verticalSmudged {
+		} else if verticalOffset, verticalSmudged := splitOffset(Transpose(mirrorLines), smudgeable); verticalSmudged {
 			sum += verticalOffset
 		} else {
 			sum += 100*horizontalOffset + verticalOffset
@@ -74,16 +74,16 @@ func part2(input string) int {
 }
 
 func main() {
-	shared.Check("Part 1", 405, func() int {
+	Check("Part 1", 405, func() int {
 		return part1(sample)
 	})
-	shared.Check("Part 1", 34821, func() int {
+	Check("Part 1", 34821, func() int {
 		return part1(input)
 	})
-	shared.Check("Part 2", 400, func() int {
+	Check("Part 2", 400, func() int {
 		return part2(sample)
 	})
-	shared.Check("Part 2", 36919, func() int {
+	Check("Part 2", 36919, func() int {
 		return part2(input)
 	})
 }

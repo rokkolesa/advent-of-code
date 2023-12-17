@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../shared"
+	. "../shared"
 	_ "embed"
 	"fmt"
 	"slices"
@@ -31,58 +31,58 @@ var input string
 
 type Symbol struct {
 	id string
-	shared.Point
+	Point
 }
 
-func (receiver Symbol) nextFrom(previous Symbol) (shared.Point, bool) {
+func (receiver Symbol) nextFrom(previous Symbol) (Point, bool) {
 	switch receiver.id {
 	case "-":
 		if receiver.Y != previous.Y {
 			return previous.Point, false
 		}
 		// add or remove X
-		return shared.Point{X: receiver.X + (receiver.X - previous.X), Y: receiver.Y}, true
+		return Point{X: receiver.X + (receiver.X - previous.X), Y: receiver.Y}, true
 	case "|":
 		if receiver.X != previous.X {
 			return previous.Point, false
 		}
 		// add or remove Y
-		return shared.Point{X: receiver.X, Y: receiver.Y + (receiver.Y - previous.Y)}, true
+		return Point{X: receiver.X, Y: receiver.Y + (receiver.Y - previous.Y)}, true
 	case "L":
 		if previous.X < receiver.X && previous.Y == receiver.Y || previous.Y > receiver.Y && previous.X == receiver.X {
 			return previous.Point, false
 		}
 		if receiver.Y != previous.Y {
-			return shared.Point{X: receiver.X + 1, Y: receiver.Y}, true
+			return Point{X: receiver.X + 1, Y: receiver.Y}, true
 		} else {
-			return shared.Point{X: receiver.X, Y: receiver.Y - 1}, true
+			return Point{X: receiver.X, Y: receiver.Y - 1}, true
 		}
 	case "7":
 		if previous.X > receiver.X && previous.Y == receiver.Y || previous.Y < receiver.Y && previous.X == receiver.X {
 			return previous.Point, false
 		}
 		if receiver.Y != previous.Y {
-			return shared.Point{X: receiver.X - 1, Y: receiver.Y}, true
+			return Point{X: receiver.X - 1, Y: receiver.Y}, true
 		} else {
-			return shared.Point{X: receiver.X, Y: receiver.Y + 1}, true
+			return Point{X: receiver.X, Y: receiver.Y + 1}, true
 		}
 	case "F":
 		if previous.X < receiver.X && previous.Y == receiver.Y || previous.Y < receiver.Y && previous.X == receiver.X {
 			return previous.Point, false
 		}
 		if receiver.Y != previous.Y {
-			return shared.Point{X: receiver.X + 1, Y: receiver.Y}, true
+			return Point{X: receiver.X + 1, Y: receiver.Y}, true
 		} else {
-			return shared.Point{X: receiver.X, Y: receiver.Y + 1}, true
+			return Point{X: receiver.X, Y: receiver.Y + 1}, true
 		}
 	case "J":
 		if previous.X > receiver.X && previous.Y == receiver.Y || previous.Y > receiver.Y && previous.X == receiver.X {
 			return previous.Point, false
 		}
 		if receiver.Y != previous.Y {
-			return shared.Point{X: receiver.X - 1, Y: receiver.Y}, true
+			return Point{X: receiver.X - 1, Y: receiver.Y}, true
 		} else {
-			return shared.Point{X: receiver.X, Y: receiver.Y - 1}, true
+			return Point{X: receiver.X, Y: receiver.Y - 1}, true
 		}
 	case "S":
 		return receiver.Point, true
@@ -180,7 +180,7 @@ func analyzeMap(input string) (pipeMap [][]Symbol, start Symbol, next Symbol) {
 	for y, line := range inputLines {
 		pipeMap[y] = make([]Symbol, len(line))
 		for x, symbolId := range line {
-			symbol := Symbol{id: string(symbolId), Point: shared.Point{X: x, Y: y}}
+			symbol := Symbol{id: string(symbolId), Point: Point{X: x, Y: y}}
 			pipeMap[y][x] = symbol
 			if symbolId == 'S' {
 				start = symbol
@@ -188,17 +188,17 @@ func analyzeMap(input string) (pipeMap [][]Symbol, start Symbol, next Symbol) {
 		}
 	}
 
-	possibleNexts := shared.Map(
-		shared.Filter([]shared.Point{
+	possibleNexts := Map(
+		Filter([]Point{
 			{start.X + 1, start.Y},
 			{start.X - 1, start.Y},
 			{start.X, start.Y + 1},
 			{start.X, start.Y - 1},
-		}, func(point shared.Point) bool { return point.X >= 0 && point.Y >= 0 }),
-		func(p shared.Point) Symbol { return pipeMap[p.Y][p.X] })
+		}, func(point Point) bool { return point.X >= 0 && point.Y >= 0 }),
+		func(p Point) Symbol { return pipeMap[p.Y][p.X] })
 
 	// it doesn't matter which step we take, as long as it is the correct one
-	next = shared.Filter(possibleNexts, func(point Symbol) bool {
+	next = Filter(possibleNexts, func(point Symbol) bool {
 		_, possible := point.nextFrom(start)
 		return possible
 	})[0]
@@ -206,28 +206,28 @@ func analyzeMap(input string) (pipeMap [][]Symbol, start Symbol, next Symbol) {
 }
 
 func main() {
-	shared.Check("Part 1", 4, func() int {
+	Check("Part 1", 4, func() int {
 		return part1(sample11)
 	})
-	shared.Check("Part 1", 8, func() int {
+	Check("Part 1", 8, func() int {
 		return part1(sample12)
 	})
-	shared.Check("Part 1", 7173, func() int {
+	Check("Part 1", 7173, func() int {
 		return part1(input)
 	})
-	shared.Check("Part 2", 4, func() int {
+	Check("Part 2", 4, func() int {
 		return part2(sample21)
 	})
-	shared.Check("Part 2", 4, func() int {
+	Check("Part 2", 4, func() int {
 		return part2(sample22)
 	})
-	shared.Check("Part 2", 8, func() int {
+	Check("Part 2", 8, func() int {
 		return part2(sample23)
 	})
-	shared.Check("Part 2", 10, func() int {
+	Check("Part 2", 10, func() int {
 		return part2(sample24)
 	})
-	shared.Check("Part 2", 291, func() int {
+	Check("Part 2", 291, func() int {
 		return part2(input)
 	})
 }
