@@ -69,7 +69,7 @@ func (thisBeam Beam) move(directions ...string) []Beam {
 	})
 }
 
-func energyFrom(layout Layout, start Beam) int {
+func energyFrom(layout Layout[string], start Beam) int {
 	beamHistory := Set[Beam](start)
 	var queue = []Beam{start}
 

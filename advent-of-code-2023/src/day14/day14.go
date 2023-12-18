@@ -12,7 +12,7 @@ var sample string
 //go:embed day14.txt
 var input string
 
-func northLoad(platform Layout) int {
+func northLoad(platform Layout[string]) int {
 	return Sum(
 		MapIndexed(platform, func(line []string, y int) int {
 			return (len(platform) - y) * CountSample(line, "O")
@@ -20,7 +20,7 @@ func northLoad(platform Layout) int {
 	)
 }
 
-func tilt(platform Layout, directions ...string) {
+func tilt(platform Layout[string], directions ...string) {
 	for _, direction := range directions {
 		// normal for-loop parameters
 		xInitial := 0
@@ -100,7 +100,7 @@ func part2(input string) int {
 	return northLoad(platform)
 }
 
-func state(platform Layout) (s string) {
+func state(platform Layout[string]) (s string) {
 	for y := range platform {
 		for x := range platform[y] {
 			s += platform[y][x]

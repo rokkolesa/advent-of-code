@@ -74,21 +74,24 @@ func Transpose(a []string) (b []string) {
 	return
 }
 
-type Layout [][]string
+type Layout[T any] [][]T
 
-func (layout Layout) InBounds(p Point) bool {
+func (layout Layout[T]) InBounds(p Point) bool {
 	yBound := len(layout)
 	xBound := len(layout[0])
 	return 0 <= p.Y && p.Y < yBound && 0 <= p.X && p.X < xBound
 }
 
-func ParseLayout(input string) Layout {
+func ParseLayout(input string) Layout[string] {
+	return ParseLayoutFunc(input, func(s string) string { return s })
+}
+func ParseLayoutFunc[T any](input string, transform func(s string) T) Layout[T] {
 	lines := strings.Split(input, "\n")
-	layout := make(Layout, len(lines))
+	layout := make(Layout[T], len(lines))
 	for y, line := range lines {
-		layout[y] = make([]string, len(line))
+		layout[y] = make([]T, len(line))
 		for x, char := range line {
-			layout[y][x] = string(char)
+			layout[y][x] = transform(string(char))
 		}
 	}
 	return layout
