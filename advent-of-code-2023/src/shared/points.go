@@ -1,5 +1,7 @@
 package shared
 
+import "slices"
+
 type Point struct {
 	X int
 	Y int
@@ -7,17 +9,14 @@ type Point struct {
 
 func (thisPoint Point) Adjacent() []Point {
 	return []Point{
-		// left-right
-		{X: thisPoint.X - 1, Y: thisPoint.Y},
-		{X: thisPoint.X + 1, Y: thisPoint.Y},
-		// top-bottom
-		{X: thisPoint.X, Y: thisPoint.Y + 1},
-		{X: thisPoint.X, Y: thisPoint.Y - 1},
-		// diagonals
-		{X: thisPoint.X - 1, Y: thisPoint.Y - 1},
-		{X: thisPoint.X + 1, Y: thisPoint.Y - 1},
-		{X: thisPoint.X + 1, Y: thisPoint.Y + 1},
-		{X: thisPoint.X - 1, Y: thisPoint.Y + 1},
+		thisPoint.Move("L"),
+		thisPoint.Move("R"),
+		thisPoint.Move("U"),
+		thisPoint.Move("D"),
+		thisPoint.Move("U").Move("L"),
+		thisPoint.Move("U").Move("R"),
+		thisPoint.Move("D").Move("L"),
+		thisPoint.Move("D").Move("R"),
 	}
 }
 
@@ -41,6 +40,29 @@ func (thisPoint Point) Negative() Point {
 
 func (thisPoint Point) Move(direction string) Point {
 	return thisPoint.Plus(Unit(direction))
+}
+
+func (thisPoint Point) Turn(direction, turn string) (Point, string) {
+	directions := []string{"U", "R", "D", "L"}
+	directionIndex := slices.Index(directions, direction)
+	if directionIndex < 0 {
+		panic("Unknown direction!")
+	}
+	var newDirection string
+	switch turn {
+	case "S":
+		newDirection = direction
+	case "B":
+		newDirection = directions[(directionIndex+2)%4]
+	case "R":
+		newDirection = directions[(directionIndex+1)%4]
+	case "L":
+		newDirection = directions[(directionIndex+3)%4]
+	default:
+		panic("Unknown turn!")
+
+	}
+	return thisPoint.Move(newDirection), newDirection
 }
 
 func Unit(direction string) Point {
