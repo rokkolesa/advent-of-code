@@ -28,6 +28,13 @@ func (thisPoint Point) Plus(other Point) Point {
 	}
 }
 
+func (thisPoint Point) Times(scalar int) Point {
+	return Point{
+		X: thisPoint.X * scalar,
+		Y: thisPoint.Y * scalar,
+	}
+}
+
 func (thisPoint Point) Negative() Point {
 	return Point{X: -thisPoint.X, Y: -thisPoint.Y}
 }
