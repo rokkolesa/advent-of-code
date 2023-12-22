@@ -13,10 +13,6 @@ func (thisPoint Point) Adjacent() []Point {
 		thisPoint.Move("R"),
 		thisPoint.Move("U"),
 		thisPoint.Move("D"),
-		thisPoint.Move("U").Move("L"),
-		thisPoint.Move("U").Move("R"),
-		thisPoint.Move("D").Move("L"),
-		thisPoint.Move("D").Move("R"),
 	}
 }
 
