@@ -78,6 +78,17 @@ func Mod(a, b int) int {
 	return (a%b + b) % b
 }
 
+func Gcd(a, b int) int {
+	for b != 0 {
+		b, a = a%b, b
+	}
+	return a
+}
+
+func Lcm(a, b int) int {
+	return a * b / Gcd(a, b)
+}
+
 type Layout[T any] [][]T
 
 func (layout Layout[T]) InBounds(p Point) bool {

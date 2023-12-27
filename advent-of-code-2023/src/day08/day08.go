@@ -45,22 +45,11 @@ func part2(input string) int {
 			}
 		}
 	}
-	return Reduce(pathToZ, pathToZ[0], lcm)
+	return Reduce(pathToZ, pathToZ[0], Lcm)
 }
 
 func lastRune(s string) rune {
 	return rune(s[len(s)-1])
-}
-
-func gcd(a, b int) int {
-	for b != 0 {
-		b, a = a%b, b
-	}
-	return a
-}
-
-func lcm(a, b int) int {
-	return a * b / gcd(a, b)
 }
 
 func findDirections(input string) (directions []rune, nodes map[string]map[rune]string) {
