@@ -8,6 +8,8 @@ In 2022, I'm going to use the [Kotlin][kotlin] language with the [Advent of Code
 
 In 2023, I'm going to use the [Go][golang] language.
 
+In 2024, I'm going to use the [Rust][rust] language.
+
 [^aoc]:
     [Advent of Code][aoc] – An annual event of Christmas-oriented programming challenges started December 2015.
     Every year since then, beginning on the first day of December, a programming puzzle is published every day for twenty-five days.
@@ -17,3 +19,4 @@ In 2023, I'm going to use the [Go][golang] language.
 [kotlin]: https://kotlinlang.org
 [template]: https://github.com/kotlin-hands-on/advent-of-code-kotlin-template
 [golang]: https://go.dev/
+[rust]: https://www.rust-lang.org

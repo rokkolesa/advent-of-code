@@ -1,5 +1,7 @@
 **/.DS_Store
 advent-of-code-2022/.gradle
+advent-of-code-2024/inputs
+advent-of-code-2024/**/target
 .idea
 .fleet
 build
