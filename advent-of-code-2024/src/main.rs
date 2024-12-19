@@ -1,6 +1,6 @@
-mod day01;
-mod day02;
 mod utils;
+mod day01;
+mod day19;
 
 use std::env;
 
@@ -11,6 +11,7 @@ fn main() {
 
     match day {
         1 => day01::run(),
+        19 => day19::run(),
         // Add more days here as needed
         _ => eprintln!("Unsupported day: {}", day),
     }
